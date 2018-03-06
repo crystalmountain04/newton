@@ -68,7 +68,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MainWindowController.cs" />
     <Compile Include="MainWindowViewModel.cs" />
+    <Compile Include="Planet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

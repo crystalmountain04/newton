@@ -13,5 +13,14 @@ namespace newton
     /// </summary>
     public partial class App : Application
     {
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            var aView = new MainWindow();
+            var aViewModel = new MainWindowViewModel();
+            var aController = new MainWindowController();
+            aView.DataContext = aViewModel;
+            aController.ViewModel = aViewModel;
+            aView.Show();
+        }
     }
 }
