@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
+using System.Windows;
 
 namespace newton
 {
@@ -26,10 +27,12 @@ namespace newton
             myPlanet1 = new Planet();
             myPlanet1.Mass = 50;
             myPlanet1.Location = new System.Windows.Point(0, 0);
+            myPlanet1.Acceleration = new System.Windows.Point(1, 0);
 
             myPlanet2 = new Planet();
             myPlanet2.Mass = 50;
             myPlanet2.Location = new System.Windows.Point(myConfig.SandboxSize_px - myPlanet2.Mass, myConfig.SandboxSize_px - myPlanet2.Mass);
+            myPlanet2.Acceleration = new System.Windows.Point(-1, 0);
 
             ViewModel.Planet1 = myPlanet1;
             ViewModel.Planet2 = myPlanet2;
@@ -44,13 +47,49 @@ namespace newton
 
         private void M_Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            moveRelativ(myPlanet1, 1, 1);
-            moveRelativ(myPlanet2, -1, -1);
+            updateAcceleration(myPlanet1, myPlanet2);
+            updateAcceleration(myPlanet2, myPlanet1);
+
+            applyAcceleration(myPlanet1);
+            applyAcceleration(myPlanet2);
         }
 
-        private void moveRelativ(Planet thePlanetToMove, double theDeltaX, double theDeltaY)
+        private void applyAcceleration(Planet thePlanetToMove)
         {
-            thePlanetToMove.Location = new System.Windows.Point(thePlanetToMove.Location.X + theDeltaX, thePlanetToMove.Location.Y + theDeltaY);
+            thePlanetToMove.Location = addPoints(thePlanetToMove.Location, thePlanetToMove.Acceleration);
+        }
+
+        private void updateAcceleration(Planet thePlanetToUpdate, Planet theOtherPlanet)
+        {
+            var aDiff = getDiffVector(thePlanetToUpdate.Location, theOtherPlanet.Location);
+            var aLength = getLength(thePlanetToUpdate.Location, theOtherPlanet.Location);
+            var aNorm = (aLength * aLength * aLength);
+            var aNewAcc = new Point(myConfig.GravitationConstant * aDiff.X / aNorm, myConfig.GravitationConstant * aDiff.Y / aNorm);
+
+            thePlanetToUpdate.Acceleration = addPoints(thePlanetToUpdate.Acceleration, aNewAcc);
+        }
+
+        private Point addPoints(Point theFirstPoint, Point theSecondPoint)
+        {
+            return new Point(theFirstPoint.X + theSecondPoint.X, theFirstPoint.Y + theSecondPoint.Y);
+        }
+
+        private Point subPoints(Point theFirstPoint, Point theSecondPoint)
+        {
+            return new Point(theFirstPoint.X - theSecondPoint.X, theFirstPoint.Y - theSecondPoint.Y);
+        }
+
+        private Point getDiffVector(Point theFirstPoint, Point theSecondPoint)
+        {
+            var aDeltaX = theFirstPoint.X - theSecondPoint.X;
+            var aDeltaY = theFirstPoint.Y - theSecondPoint.Y;
+            return new Point(aDeltaX, aDeltaY);
+        }
+
+        private double getLength(Point theFirstPoint, Point theSecondPoint)
+        {
+            var aDiff = getDiffVector(theFirstPoint, theSecondPoint);
+            return Math.Sqrt(aDiff.X * aDiff.X + aDiff.Y * aDiff.Y);
         }
 
         private Timer m_Timer;
