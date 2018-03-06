@@ -18,19 +18,19 @@ namespace newton
         public int TimeStep_ms
         {
             get;
-            private set;
+            set;
         }
 
         public int SandboxSize_px
         {
             get;
-            private set;
+            set;
         }
 
         public double GravitationConstant
         {
             get;
-            private set;
+            set;
         }
     }
 }

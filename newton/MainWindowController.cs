@@ -14,9 +14,32 @@ namespace newton
         {
             myConfig = theConfiguration;
             ViewModel.SandBoxSize = theConfiguration.SandboxSize_px;
+            ViewModel.GravitationalConstant = theConfiguration.GravitationConstant;
+            ViewModel.ApplyConstant = new CommandHandler(p => myConfig.GravitationConstant = ViewModel.GravitationalConstant, p => true);
+            ViewModel.Start = new CommandHandler(p => startSimulation(), p => !m_IsRunning);
+            ViewModel.Stop = new CommandHandler(p => stopSimulation(), p => m_IsRunning);
+            ViewModel.Reset = new CommandHandler(p => initPlanets(), p => true);
             initPlanets();
-            launchTimer();
+            initTimer();
         }
+
+        private void startSimulation()
+        {
+            m_IsRunning = true;
+            m_Timer.Start();
+            ViewModel.Start.RaiseCanExecuteChanged();
+            ViewModel.Stop.RaiseCanExecuteChanged();
+        }
+
+        private void stopSimulation()
+        {
+            m_IsRunning = false;
+            m_Timer.Stop();
+            ViewModel.Start.RaiseCanExecuteChanged();
+            ViewModel.Stop.RaiseCanExecuteChanged();
+        }
+
+        private bool m_IsRunning = false;
 
         Configuration myConfig;
         Planet myPlanet1;
@@ -38,11 +61,10 @@ namespace newton
             ViewModel.Planet2 = myPlanet2;
         }
 
-        private void launchTimer()
+        private void initTimer()
         {
             m_Timer = new Timer(myConfig.TimeStep_ms);
             m_Timer.Elapsed += M_Timer_Elapsed;
-            m_Timer.Start();
         }
 
         private void M_Timer_Elapsed(object sender, ElapsedEventArgs e)
