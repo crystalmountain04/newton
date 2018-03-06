@@ -9,22 +9,26 @@ namespace newton
 {
     public class MainWindowController
     {
-        public void Initialize()
+        public void Initialize(Configuration theConfiguration)
         {
+            myConfig = theConfiguration;
             initPlanets();
             launchTimer();
         }
 
+        Configuration myConfig;
         Planet myPlanet1;
         Planet myPlanet2;
 
         private void initPlanets()
         {
             myPlanet1 = new Planet();
+            myPlanet1.Mass = 50;
             myPlanet1.Location = new System.Windows.Point(0, 0);
 
             myPlanet2 = new Planet();
-            myPlanet2.Location = new System.Windows.Point(250, 250);
+            myPlanet2.Mass = 50;
+            myPlanet2.Location = new System.Windows.Point(myConfig.SandboxSize_px - myPlanet2.Mass, myConfig.SandboxSize_px - myPlanet2.Mass);
 
             ViewModel.Planet1 = myPlanet1;
             ViewModel.Planet2 = myPlanet2;
@@ -32,7 +36,7 @@ namespace newton
 
         private void launchTimer()
         {
-            m_Timer = new Timer(500);
+            m_Timer = new Timer(myConfig.TimeStep_ms);
             m_Timer.Elapsed += M_Timer_Elapsed;
             m_Timer.Start();
         }
