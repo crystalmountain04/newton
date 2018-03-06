@@ -12,6 +12,7 @@ namespace newton
         public void Initialize(Configuration theConfiguration)
         {
             myConfig = theConfiguration;
+            ViewModel.SandBoxSize = theConfiguration.SandboxSize_px;
             initPlanets();
             launchTimer();
         }

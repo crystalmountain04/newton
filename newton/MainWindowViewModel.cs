@@ -11,6 +11,14 @@ namespace newton
 {
     public class MainWindowViewModel : INotifyPropertyChanged
     {
+        private int mySandBoxSize;
+
+        public int SandBoxSize
+        {
+            get { return mySandBoxSize; }
+            set { mySandBoxSize = value; RaisePropertyChanged(); }
+        }
+
         private Planet myPlanet1;
         public Planet Planet1
         {
