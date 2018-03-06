@@ -25,14 +25,14 @@ namespace newton
         private void initPlanets()
         {
             myPlanet1 = new Planet();
-            myPlanet1.Mass = 50;
-            myPlanet1.Location = new System.Windows.Point(0, 0);
-            myPlanet1.Acceleration = new System.Windows.Point(1, 0);
+            myPlanet1.Mass = 80;
+            myPlanet1.Location = new System.Windows.Point(100, 100);
+            myPlanet1.Acceleration = new System.Windows.Point(0, 0);
 
             myPlanet2 = new Planet();
-            myPlanet2.Mass = 50;
+            myPlanet2.Mass = 10;
             myPlanet2.Location = new System.Windows.Point(myConfig.SandboxSize_px - myPlanet2.Mass, myConfig.SandboxSize_px - myPlanet2.Mass);
-            myPlanet2.Acceleration = new System.Windows.Point(-1, 0);
+            myPlanet2.Acceleration = new System.Windows.Point(-10, 0);
 
             ViewModel.Planet1 = myPlanet1;
             ViewModel.Planet2 = myPlanet2;
@@ -56,7 +56,8 @@ namespace newton
 
         private void applyAcceleration(Planet thePlanetToMove)
         {
-            thePlanetToMove.Location = addPoints(thePlanetToMove.Location, thePlanetToMove.Acceleration);
+            var aAccWithMass = new Point(thePlanetToMove.Acceleration.X / thePlanetToMove.Mass, thePlanetToMove.Acceleration.Y / thePlanetToMove.Mass);
+            thePlanetToMove.Location = addPoints(thePlanetToMove.Location, aAccWithMass);
         }
 
         private void updateAcceleration(Planet thePlanetToUpdate, Planet theOtherPlanet)
@@ -64,7 +65,8 @@ namespace newton
             var aDiff = getDiffVector(thePlanetToUpdate.Location, theOtherPlanet.Location);
             var aLength = getLength(thePlanetToUpdate.Location, theOtherPlanet.Location);
             var aNorm = (aLength * aLength * aLength);
-            var aNewAcc = new Point(myConfig.GravitationConstant * aDiff.X / aNorm, myConfig.GravitationConstant * aDiff.Y / aNorm);
+            var aNewAcc = new Point(myConfig.GravitationConstant * thePlanetToUpdate.Mass * theOtherPlanet.Mass * aDiff.X / aNorm,
+                myConfig.GravitationConstant * thePlanetToUpdate.Mass * theOtherPlanet.Mass * aDiff.Y / aNorm);
 
             thePlanetToUpdate.Acceleration = addPoints(thePlanetToUpdate.Acceleration, aNewAcc);
         }

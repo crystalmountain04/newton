@@ -8,8 +8,8 @@
         Title="MainWindow" Height="350" Width="525">
     <Grid>
         <Canvas Height="{Binding SandBoxSize}" Width="{Binding SandBoxSize}" Background="LightGray">
-            <Ellipse Width="50" Height="50" StrokeThickness="1" Stroke="Blue" Canvas.Left="{Binding Planet1.Location.X}" Canvas.Bottom="{Binding Planet1.Location.Y}" />
-            <Ellipse Width="50" Height="50" StrokeThickness="1" Stroke="Red" Canvas.Left="{Binding Planet2.Location.X}" Canvas.Bottom="{Binding Planet2.Location.Y}" />
+            <Ellipse Width="{Binding Planet1.Mass}" Height="{Binding Planet1.Mass}" StrokeThickness="1" Stroke="Blue" Canvas.Left="{Binding Planet1.Location.X}" Canvas.Bottom="{Binding Planet1.Location.Y}" />
+            <Ellipse Width="{Binding Planet2.Mass}" Height="{Binding Planet2.Mass}" StrokeThickness="1" Stroke="Red" Canvas.Left="{Binding Planet2.Location.X}" Canvas.Bottom="{Binding Planet2.Location.Y}" />
         </Canvas>
     </Grid>
 </Window>
