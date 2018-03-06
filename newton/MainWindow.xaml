@@ -8,15 +8,8 @@
         Title="MainWindow" Height="350" Width="525">
     <Grid>
         <Canvas Height="300" Width="300">
-
-            <!-- Draws a diagonal line from (10,10) to (50,50). -->
-            <Line    X1="{Binding P1Start.X}" Y1="{Binding P1Start.Y}"    X2="{Binding P1End.X}" Y2="{Binding P1End.Y}"    Stroke="Black"    StrokeThickness="4" />
-            <!-- Draws a horizontal line from (10,60) to (150,60). -->
-            <Line     X1="{Binding P2Start.X}" Y1="{Binding P2Start.Y}"    X2="{Binding P2End.X}" Y2="{Binding P2End.Y}"     Stroke="Black"     StrokeThickness="4"/>
-
-            <Ellipse Width="50" Height="50" StrokeThickness="1" Stroke="Blue" Canvas.Bottom="0" Canvas.Left="0"/>
-            <Ellipse Width="50" Height="50" StrokeThickness="1" Stroke="Red" Canvas.Bottom="250" Canvas.Left="250"/>
-
+            <Ellipse Width="50" Height="50" StrokeThickness="1" Stroke="Blue" Canvas.Left="{Binding Planet1.Location.X}" Canvas.Bottom="{Binding Planet1.Location.Y}" />
+            <Ellipse Width="50" Height="50" StrokeThickness="1" Stroke="Red" Canvas.Left="{Binding Planet2.Location.X}" Canvas.Bottom="{Binding Planet2.Location.Y}" />
         </Canvas>
     </Grid>
 </Window>

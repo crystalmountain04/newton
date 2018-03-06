@@ -20,6 +20,7 @@ namespace newton
             var aController = new MainWindowController();
             aView.DataContext = aViewModel;
             aController.ViewModel = aViewModel;
+            aController.Initialize();
             aView.Show();
         }
     }

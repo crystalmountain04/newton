@@ -11,32 +11,18 @@ namespace newton
 {
     public class MainWindowViewModel : INotifyPropertyChanged
     {
-        private Point myP1Start = new Point(10, 10);
-        public Point P1Start
+        private Planet myPlanet1;
+        public Planet Planet1
         {
-            get { return myP1Start; }
-            set { myP1Start = value; RaisePropertyChanged(); }
+            get { return myPlanet1; }
+            set { myPlanet1 = value; RaisePropertyChanged(); }
         }
 
-        private Point myP1End = new Point(50, 50);
-        public Point P1End
+        private Planet myPlanet2;
+        public Planet Planet2
         {
-            get { return myP1End; }
-            set { myP1End = value; RaisePropertyChanged(); }
-        }
-
-        private Point myP2Start = new Point(10, 60);
-        public Point P2Start
-        {
-            get { return myP2Start; }
-            set { myP2Start = value; RaisePropertyChanged(); }
-        }
-
-        private Point myP2End = new Point(150, 60);
-        public Point P2End
-        {
-            get { return myP2End; }
-            set { myP2End = value; RaisePropertyChanged(); }
+            get { return myPlanet2; }
+            set { myPlanet2 = value; RaisePropertyChanged(); }
         }
 
         #region INotifyPropertyChanged implementation
