@@ -7,6 +7,13 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
-        
+        <Canvas Height="300" Width="300">
+
+            <!-- Draws a diagonal line from (10,10) to (50,50). -->
+            <Line    X1="10" Y1="10"    X2="50" Y2="50"    Stroke="Black"    StrokeThickness="4" />
+            <!-- Draws a horizontal line from (10,60) to (150,60). -->
+            <Line     X1="10" Y1="60"     X2="150" Y2="60"     Stroke="Black"     StrokeThickness="4"/>
+
+        </Canvas>
     </Grid>
 </Window>
