@@ -48,9 +48,9 @@ namespace newton
             var aPlanets = new List<Planet>();
 
             aPlanets.Add(new Planet(80, new Point(100, 100), new Point(0, 0), "Blue"));
-            aPlanets.Add(new Planet(30, new Point(myConfig.SandboxSize_px - 30, 0), new Point(0, 30), "Green"));
+            aPlanets.Add(new Planet(30, new Point(myConfig.SandboxSize_px - 30, 0), new Point(0, 30), "Turquoise"));
             aPlanets.Add(new Planet(30, new Point(0, myConfig.SandboxSize_px - 30), new Point(0, -30), "Magenta"));
-            aPlanets.Add(new Planet(20, new Point(0, 0), new Point(20, 5), "Olive"));
+            aPlanets.Add(new Planet(20, new Point(0, 0), new Point(20, 5), "Green"));
             aPlanets.Add(new Planet(10, new Point(myConfig.SandboxSize_px - 10, myConfig.SandboxSize_px - 10), new Point(-10, 0), "Red"));
 
             ViewModel.Planets = new ObservableCollection<Planet>(aPlanets);
