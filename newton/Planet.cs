@@ -23,7 +23,15 @@ namespace newton
         public Point Location
         {
             get { return myLocation; }
-            set { myLocation = value; RaisePropertyChanged(); }
+            set { myLocation = value; RaisePropertyChanged(); RaisePropertyChanged(nameof(DisplayedLocation)); }
+        }
+
+        public Point DisplayedLocation
+        {
+            get
+            {
+                return new Point(myLocation.X - (myMass / 2.0), myLocation.Y - (myMass / 2.0));
+            }
         }
 
         private Point myAcceleration;
