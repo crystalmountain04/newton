@@ -21,7 +21,7 @@
             </ItemsControl.ItemContainerStyle>
             <ItemsControl.ItemTemplate>
                 <DataTemplate DataType="{x:Type local:Planet}">
-                    <Ellipse Width="{Binding Mass}" Height="{Binding Mass}" StrokeThickness="1" Stroke="{Binding Color}" />
+                    <Ellipse Width="{Binding Mass}" Height="{Binding Mass}" StrokeThickness="1" Stroke="{Binding Color}" Fill="{Binding Color}" />
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
             <ItemsControl.ItemsPanel>
