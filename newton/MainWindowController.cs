@@ -53,6 +53,17 @@ namespace newton
             aPlanets.Add(new Planet(20, new Point(0, 0), new Point(20, 5), "Green"));
             aPlanets.Add(new Planet(10, new Point(myConfig.SandboxSize_px - 10, myConfig.SandboxSize_px - 10), new Point(-10, 0), "Red"));
 
+            Random aRandom = new Random();
+            for(int i=0;i<10;i++)
+            {
+                var aLocX = aRandom.Next(0, myConfig.SandboxSize_px);
+                var aLocY = aRandom.Next(0, myConfig.SandboxSize_px);
+                var aMass = aRandom.Next(1, 50);
+                var aAccX = aRandom.Next(-10, 10);
+                var aAccY = aRandom.Next(-10, 10);
+                aPlanets.Add(new Planet(aMass, new Point(aLocX, aLocY), new Point(aAccX, aAccY), "White"));
+            }
+
             ViewModel.Planets = new ObservableCollection<Planet>(aPlanets);
         }
 
