@@ -24,5 +24,43 @@ namespace newton
         {
             InitializeComponent();
         }
+
+        private bool myIsDragging = false;
+        private Planet myDraggedPlanet = null; 
+
+        private void Ellipse_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            var aCapturedEllipse = (sender as Ellipse);
+            if (null != aCapturedEllipse)
+            {
+                myDraggedPlanet = aCapturedEllipse.DataContext as Planet;
+                myIsDragging = true;
+                myHost.MouseMove += ACapturedEllipse_MouseMove;
+                myHost.MouseLeftButtonUp += ACapturedEllipse_MouseLeftButtonUp;
+            }
+        }
+
+        private void ACapturedEllipse_MouseMove(object sender, MouseEventArgs e)
+        {
+            if ( myIsDragging)
+            {
+                var aViewModel = this.DataContext as MainWindowViewModel;
+                var aUnflippedPosition = e.GetPosition(myHost);
+                var aFlippedPosition = new Point(aUnflippedPosition.X, aViewModel.SandBoxSize - aUnflippedPosition.Y);
+
+                myDraggedPlanet.Location = aFlippedPosition;
+            }
+        }
+
+        private void ACapturedEllipse_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if (myIsDragging)
+            {
+                myIsDragging = false;
+                myDraggedPlanet = null;
+                myHost.MouseMove -= ACapturedEllipse_MouseMove;
+                myHost.MouseLeftButtonUp -= ACapturedEllipse_MouseLeftButtonUp;
+            }
+        }
     }
 }

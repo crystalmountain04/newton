@@ -12,7 +12,7 @@
             <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
 
-        <ItemsControl ItemsSource="{Binding Planets}" Width="{Binding SandBoxSize}" Height="{Binding SandBoxSize}">
+        <ItemsControl ItemsSource="{Binding Planets}" Width="{Binding SandBoxSize}" Height="{Binding SandBoxSize}" x:Name="myHost">
             <ItemsControl.ItemContainerStyle>
                 <Style TargetType="FrameworkElement">
                     <Setter Property="Canvas.Left" Value="{Binding Location.X}" />
@@ -21,7 +21,7 @@
             </ItemsControl.ItemContainerStyle>
             <ItemsControl.ItemTemplate>
                 <DataTemplate DataType="{x:Type local:Planet}">
-                    <Ellipse Width="{Binding Mass}" Height="{Binding Mass}" StrokeThickness="1" Stroke="{Binding Color}" Fill="{Binding Color}" />
+                    <Ellipse Width="{Binding Mass}" MouseLeftButtonDown="Ellipse_MouseLeftButtonDown" Height="{Binding Mass}" StrokeThickness="1" Stroke="{Binding Color}" Fill="{Binding Color}" />
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
             <ItemsControl.ItemsPanel>
