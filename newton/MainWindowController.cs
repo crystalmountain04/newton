@@ -90,7 +90,7 @@ namespace newton
         private void updateAcceleration(Planet thePlanetToUpdate, Planet theOtherPlanet)
         {
             var aDiff = getDiffVector(thePlanetToUpdate.Location, theOtherPlanet.Location);
-            var aLength = getLength(thePlanetToUpdate.Location, theOtherPlanet.Location);
+            var aLength = getDistance(thePlanetToUpdate.Location, theOtherPlanet.Location);
             var aNorm = (aLength * aLength * aLength);
             var aNewAcc = new Point(myConfig.GravitationConstant * thePlanetToUpdate.Mass * theOtherPlanet.Mass * aDiff.X / aNorm,
                 myConfig.GravitationConstant * thePlanetToUpdate.Mass * theOtherPlanet.Mass * aDiff.Y / aNorm);
@@ -115,7 +115,7 @@ namespace newton
             return new Point(aDeltaX, aDeltaY);
         }
 
-        private double getLength(Point theFirstPoint, Point theSecondPoint)
+        private double getDistance(Point theFirstPoint, Point theSecondPoint)
         {
             var aDiff = getDiffVector(theFirstPoint, theSecondPoint);
             return Math.Sqrt(aDiff.X * aDiff.X + aDiff.Y * aDiff.Y);
