@@ -11,6 +11,14 @@ namespace newton
 {
     public class Planet : INotifyPropertyChanged
     {
+        public Planet(double theMass, Point theInitialLocation, Point theInitialAcceleration, string theColor)
+        {
+            myMass = theMass;
+            myLocation = theInitialLocation;
+            myAcceleration = theInitialAcceleration;
+            myColor = theColor;
+        }
+
         private Point myLocation;
         public Point Location
         {
@@ -30,6 +38,13 @@ namespace newton
         {
             get { return myMass; }
             set { myMass = value; RaisePropertyChanged(); }
+        }
+
+        private string myColor;
+        public string Color
+        {
+            get { return myColor; }
+            set { myColor = value; RaisePropertyChanged(); }
         }
 
         #region INotifyPropertyChanged implementation

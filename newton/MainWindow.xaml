@@ -11,11 +11,25 @@
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
-        
-        <Canvas Grid.Row="0" Height="{Binding SandBoxSize}" Width="{Binding SandBoxSize}" Background="LightGray">
-            <Ellipse Width="{Binding Planet1.Mass}" Height="{Binding Planet1.Mass}" StrokeThickness="1" Stroke="Blue" Canvas.Left="{Binding Planet1.Location.X}" Canvas.Bottom="{Binding Planet1.Location.Y}" />
-            <Ellipse Width="{Binding Planet2.Mass}" Height="{Binding Planet2.Mass}" StrokeThickness="1" Stroke="Red" Canvas.Left="{Binding Planet2.Location.X}" Canvas.Bottom="{Binding Planet2.Location.Y}" />
-        </Canvas>
+
+        <ItemsControl ItemsSource="{Binding Planets}" Width="{Binding SandBoxSize}" Height="{Binding SandBoxSize}">
+            <ItemsControl.ItemContainerStyle>
+                <Style TargetType="FrameworkElement">
+                    <Setter Property="Canvas.Left" Value="{Binding Location.X}" />
+                    <Setter Property="Canvas.Bottom" Value="{Binding Location.Y}" />
+                </Style>
+            </ItemsControl.ItemContainerStyle>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type local:Planet}">
+                    <Ellipse Width="{Binding Mass}" Height="{Binding Mass}" StrokeThickness="1" Stroke="{Binding Color}" />
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Canvas IsItemsHost="True" Background="LightGray" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
 
         <StackPanel Grid.Row="1" Orientation="Horizontal">
             <Button Margin="5" Background="Green" Command="{Binding Start}">Start</Button>

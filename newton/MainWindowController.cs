@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -42,23 +43,15 @@ namespace newton
         private bool m_IsRunning = false;
 
         Configuration myConfig;
-        Planet myPlanet1;
-        Planet myPlanet2;
-
         private void initPlanets()
         {
-            myPlanet1 = new Planet();
-            myPlanet1.Mass = 80;
-            myPlanet1.Location = new System.Windows.Point(100, 100);
-            myPlanet1.Acceleration = new System.Windows.Point(0, 0);
+            var aPlanets = new List<Planet>();
 
-            myPlanet2 = new Planet();
-            myPlanet2.Mass = 10;
-            myPlanet2.Location = new System.Windows.Point(myConfig.SandboxSize_px - myPlanet2.Mass, myConfig.SandboxSize_px - myPlanet2.Mass);
-            myPlanet2.Acceleration = new System.Windows.Point(-10, 0);
+            aPlanets.Add(new Planet(80, new Point(100, 100), new Point(0, 0), "Blue"));
+            aPlanets.Add(new Planet(30, new Point(myConfig.SandboxSize_px - 30, 0), new Point(0, 30), "Green"));
+            aPlanets.Add(new Planet(10, new Point(myConfig.SandboxSize_px - 10, myConfig.SandboxSize_px - 10), new Point(-10, 0), "Red"));
 
-            ViewModel.Planet1 = myPlanet1;
-            ViewModel.Planet2 = myPlanet2;
+            ViewModel.Planets = new ObservableCollection<Planet>(aPlanets);
         }
 
         private void initTimer()
@@ -69,11 +62,21 @@ namespace newton
 
         private void M_Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            updateAcceleration(myPlanet1, myPlanet2);
-            updateAcceleration(myPlanet2, myPlanet1);
+            foreach (var aPlanet in ViewModel.Planets)
+            {
+                foreach (var aOtherPlanet in ViewModel.Planets)
+                {
+                    if (aOtherPlanet != aPlanet)
+                    {
+                        updateAcceleration(aPlanet, aOtherPlanet);
+                    }
+                }
+            }
 
-            applyAcceleration(myPlanet1);
-            applyAcceleration(myPlanet2);
+            foreach (var aPlanet in ViewModel.Planets)
+            {
+                applyAcceleration(aPlanet);
+            }
         }
 
         private void applyAcceleration(Planet thePlanetToMove)

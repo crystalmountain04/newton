@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -19,18 +20,11 @@ namespace newton
             set { mySandBoxSize = value; RaisePropertyChanged(); }
         }
 
-        private Planet myPlanet1;
-        public Planet Planet1
+        private ObservableCollection<Planet> myPlanets;
+        public ObservableCollection<Planet> Planets
         {
-            get { return myPlanet1; }
-            set { myPlanet1 = value; RaisePropertyChanged(); }
-        }
-
-        private Planet myPlanet2;
-        public Planet Planet2
-        {
-            get { return myPlanet2; }
-            set { myPlanet2 = value; RaisePropertyChanged(); }
+            get { return myPlanets; }
+            set { myPlanets = value; RaisePropertyChanged(); }
         }
 
         private double myGravitationalConstant;
