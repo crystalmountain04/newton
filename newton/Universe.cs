@@ -13,9 +13,10 @@ namespace newton
         {
         }
 
-        public Universe(List<Planet> thePlanets)
+        public Universe(List<Planet> thePlanets, Configuration theConfiguration)
         {
             Planets = thePlanets;
+            Configuration = theConfiguration;
         }
 
         public Universe(string theFileName)
@@ -24,10 +25,17 @@ namespace newton
             if(null != aUniverse)
             {
                 this.Planets = aUniverse.Planets;
+                this.Configuration = aUniverse.Configuration;
             }
         }
 
         public List<Planet> Planets
+        {
+            get;
+            set;
+        }
+
+        public Configuration Configuration
         {
             get;
             set;

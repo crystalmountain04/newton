@@ -8,6 +8,10 @@ namespace newton
 {
     public class Configuration
     {
+        public Configuration()
+        {
+        }
+
         public Configuration(int theTimeStep_ms, int theSandBoxSize_px, double theGravitationConstant, double theCollisionThreshold)
         {
             TimeStep_ms = theTimeStep_ms;

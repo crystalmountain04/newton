@@ -37,6 +37,9 @@ namespace newton
                 if(null != aUniverse)
                 {
                     ViewModel.Planets = new ObservableCollection<Planet>(aUniverse.Planets);
+                    myConfig = aUniverse.Configuration;
+                    ViewModel.SandBoxSize = myConfig.SandboxSize_px;
+                    ViewModel.GravitationalConstant = myConfig.GravitationConstant;
                 }
             }
         }
@@ -54,7 +57,7 @@ namespace newton
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             if (saveFileDialog.ShowDialog() == true)
             {
-                var aUniverse = new Universe(ViewModel.Planets.ToList());
+                var aUniverse = new Universe(ViewModel.Planets.ToList(), myConfig);
                 aUniverse.Save(saveFileDialog.FileName);
             }
         }
