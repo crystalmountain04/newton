@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,8 +22,23 @@ namespace newton
             ViewModel.Start = new CommandHandler(p => startSimulation(), p => !m_IsRunning);
             ViewModel.Stop = new CommandHandler(p => stopSimulation(), p => m_IsRunning);
             ViewModel.Reset = new CommandHandler(p => initPlanets(), p => true);
+            ViewModel.Save = new CommandHandler(p => saveUniverse(), p => true);
+            ViewModel.Load = new CommandHandler(p => loadUniverse(), p => true);
             initPlanets();
             initTimer();
+        }
+
+        private void loadUniverse()
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            if (openFileDialog.ShowDialog() == true)
+            {
+                var aUniverse = new Universe(openFileDialog.FileName);
+                if(null != aUniverse)
+                {
+                    ViewModel.Planets = new ObservableCollection<Planet>(aUniverse.Planets);
+                }
+            }
         }
 
         private void startSimulation()
@@ -30,6 +47,16 @@ namespace newton
             m_Timer.Start();
             ViewModel.Start.RaiseCanExecuteChanged();
             ViewModel.Stop.RaiseCanExecuteChanged();
+        }
+
+        private void saveUniverse()
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                var aUniverse = new Universe(ViewModel.Planets.ToList());
+                aUniverse.Save(saveFileDialog.FileName);
+            }
         }
 
         private void stopSimulation()

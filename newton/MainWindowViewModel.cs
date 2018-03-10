@@ -58,6 +58,18 @@ namespace newton
             set;
         }
 
+        public CommandHandler Save
+        {
+            get;
+            set;
+        }
+
+        public CommandHandler Load
+        {
+            get;
+            set;
+        }
+
         #region INotifyPropertyChanged implementation
 
         public event PropertyChangedEventHandler PropertyChanged;
