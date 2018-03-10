@@ -21,7 +21,7 @@
             </ItemsControl.ItemContainerStyle>
             <ItemsControl.ItemTemplate>
                 <DataTemplate DataType="{x:Type local:Planet}">
-                    <Ellipse Width="{Binding Mass}" MouseLeftButtonDown="Ellipse_MouseLeftButtonDown" Height="{Binding Mass}" StrokeThickness="1" Stroke="{Binding Color}" Fill="{Binding Color}" />
+                    <Ellipse Width="{Binding DisplayedSize}" Height="{Binding DisplayedSize}" MouseLeftButtonDown="Ellipse_MouseLeftButtonDown" StrokeThickness="1" Stroke="{Binding Color}" Fill="{Binding Color}" />
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
             <ItemsControl.ItemsPanel>

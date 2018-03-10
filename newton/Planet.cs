@@ -28,10 +28,7 @@ namespace newton
 
         public Point DisplayedLocation
         {
-            get
-            {
-                return new Point(myLocation.X - (myMass / 2.0), myLocation.Y - (myMass / 2.0));
-            }
+            get { return new Point(myLocation.X - (DisplayedSize / 2.0), myLocation.Y - (DisplayedSize / 2.0)); }
         }
 
         private Point myAcceleration;
@@ -45,7 +42,12 @@ namespace newton
         public double Mass
         {
             get { return myMass; }
-            set { myMass = value; RaisePropertyChanged(); }
+            set { myMass = value; RaisePropertyChanged(); RaisePropertyChanged(nameof(DisplayedSize)); }
+        }
+
+        public double DisplayedSize
+        {
+            get { return myMass / 5.0; }
         }
 
         private string myColor;
