@@ -84,7 +84,7 @@ namespace newton
             //aPlanets.Add(new Planet(10, new Point(myConfig.SandboxSize_px - 10, myConfig.SandboxSize_px - 10), new Point(-10, 0), "Red"));
 
             Random aRandom = new Random();
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 20; i++)
             {
                 var aLocX = aRandom.Next(0, myConfig.SandboxSize_px);
                 var aLocY = aRandom.Next(0, myConfig.SandboxSize_px);
