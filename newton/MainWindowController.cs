@@ -47,20 +47,20 @@ namespace newton
         {
             var aPlanets = new List<Planet>();
 
-            aPlanets.Add(new Planet(80, new Point(100, 100), new Point(0, 0), "Blue"));
-            aPlanets.Add(new Planet(30, new Point(myConfig.SandboxSize_px - 30, 0), new Point(0, 30), "Turquoise"));
-            aPlanets.Add(new Planet(30, new Point(0, myConfig.SandboxSize_px - 30), new Point(0, -30), "Magenta"));
-            aPlanets.Add(new Planet(20, new Point(0, 0), new Point(20, 5), "Green"));
-            aPlanets.Add(new Planet(10, new Point(myConfig.SandboxSize_px - 10, myConfig.SandboxSize_px - 10), new Point(-10, 0), "Red"));
+            //aPlanets.Add(new Planet(80, new Point(100, 100), new Point(0, 0), "Blue"));
+            //aPlanets.Add(new Planet(30, new Point(myConfig.SandboxSize_px - 30, 0), new Point(0, 30), "Turquoise"));
+            //aPlanets.Add(new Planet(30, new Point(0, myConfig.SandboxSize_px - 30), new Point(0, -30), "Magenta"));
+            //aPlanets.Add(new Planet(20, new Point(0, 0), new Point(20, 5), "Green"));
+            //aPlanets.Add(new Planet(10, new Point(myConfig.SandboxSize_px - 10, myConfig.SandboxSize_px - 10), new Point(-10, 0), "Red"));
 
             Random aRandom = new Random();
-            for(int i=0;i<10;i++)
+            for (int i = 0; i < 300; i++)
             {
                 var aLocX = aRandom.Next(0, myConfig.SandboxSize_px);
                 var aLocY = aRandom.Next(0, myConfig.SandboxSize_px);
                 var aMass = aRandom.Next(1, 50);
-                var aAccX = aRandom.Next(-10, 10);
-                var aAccY = aRandom.Next(-10, 10);
+                var aAccX = aRandom.Next(-1, 1);
+                var aAccY = aRandom.Next(-1, 1);
                 aPlanets.Add(new Planet(aMass, new Point(aLocX, aLocY), new Point(aAccX, aAccY), "White"));
             }
 
@@ -101,12 +101,19 @@ namespace newton
         private void updateAcceleration(Planet thePlanetToUpdate, Planet theOtherPlanet)
         {
             var aDiff = getDiffVector(thePlanetToUpdate.Location, theOtherPlanet.Location);
-            var aLength = getDistance(thePlanetToUpdate.Location, theOtherPlanet.Location);
-            var aNorm = (aLength * aLength * aLength);
+            var aDistance = getDistance(thePlanetToUpdate.Location, theOtherPlanet.Location);
+            var aNorm = (aDistance * aDistance * aDistance);
             var aNewAcc = new Point(myConfig.GravitationConstant * thePlanetToUpdate.Mass * theOtherPlanet.Mass * aDiff.X / aNorm,
                 myConfig.GravitationConstant * thePlanetToUpdate.Mass * theOtherPlanet.Mass * aDiff.Y / aNorm);
 
-            thePlanetToUpdate.Acceleration = addPoints(thePlanetToUpdate.Acceleration, aNewAcc);
+            if (aDistance > myConfig.CollisionThreshold)
+            {
+                thePlanetToUpdate.Acceleration = addPoints(thePlanetToUpdate.Acceleration, aNewAcc);
+            }
+            else
+            {
+                // nothing
+            }
         }
 
         private Point addPoints(Point theFirstPoint, Point theSecondPoint)
