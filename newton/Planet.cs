@@ -47,7 +47,7 @@ namespace newton
 
         public double DisplayedSize
         {
-            get { return 5; }// myMass / 10.0; }
+            get { return 2; }// myMass / 10.0; }
         }
 
         private string myColor;
