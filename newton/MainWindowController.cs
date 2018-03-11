@@ -21,7 +21,7 @@ namespace newton
         public MainWindowController()
         {
             myRenderTimer = new DispatcherTimer();
-            myRenderTimer.Interval = new TimeSpan(0, 0, 0, 0, 20);
+            myRenderTimer.Interval = new TimeSpan(0, 0, 0, 0, 10);
             myRenderTimer.Tick += MyRenderTimer_Tick;
         }
 
@@ -44,11 +44,13 @@ namespace newton
             ViewModel.Reset = new CommandHandler(p => resetSimulation(), p => true);
             ViewModel.Save = new CommandHandler(p => saveUniverseToFile(), p => true);
             ViewModel.Load = new CommandHandler(p => openUniverseFromFile(), p => true);
+            ViewModel.SyncToSimulation = new CommandHandler(p => syncToSimulation(), p => true);
         }
 
         private void resetSimulation()
         {
             mySimulation.Initialize(UniverseFactory.CreateUniverse(mySimulation.Universe.Configuration));
+            updateCommandAvailability();
             displayUniverse(mySimulation.Universe);
         }
 
@@ -76,6 +78,11 @@ namespace newton
             }
         }
 
+        private void syncToSimulation()
+        {
+            mySimulation.Universe.Planets = deepCopyToList(ViewModel.Planets);
+        }
+
         private void configureVisualization(Configuration theConfiguration)
         {
             ViewModel.SandBoxSize = theConfiguration.SandboxSize_px;
@@ -87,6 +94,7 @@ namespace newton
             mySimulation.StartSimulation();
             myRenderTimer.Start();
             updateCommandAvailability();
+            ViewModel.IsSimulationRunning = true;
         }
 
         private void stopSimulation()
@@ -94,6 +102,7 @@ namespace newton
             mySimulation.StopSimulation();
             myRenderTimer.Stop();
             updateCommandAvailability();
+            ViewModel.IsSimulationRunning = false;
         }
 
         private void updateCommandAvailability()
@@ -102,17 +111,34 @@ namespace newton
             ViewModel.Stop.RaiseCanExecuteChanged();
         }
 
-        private async void MyRenderTimer_Tick(object sender, EventArgs e)
+        private void MyRenderTimer_Tick(object sender, EventArgs e)
         {
-            await displayUniverse(mySimulation.Universe);
+            displayUniverse(mySimulation.Universe);
         }
 
-        private Task displayUniverse(Universe theUniverseToDisplay)
+        private void displayUniverse(Universe theUniverseToDisplay)
         {
-            return Task.Run(() =>
+            ViewModel.Planets = deepCopyToObservableCollection(theUniverseToDisplay.Planets);
+        }
+
+        private ObservableCollection<Planet> deepCopyToObservableCollection(List<Planet> thePlanets)
+        {
+            var aReturn = new ObservableCollection<Planet>();
+            foreach (var aPlanet in thePlanets)
             {
-                ViewModel.Planets = new ObservableCollection<Planet>(theUniverseToDisplay.Planets);
-            });
+                aReturn.Add(new Planet(aPlanet));
+            }
+            return aReturn;
+        }
+
+        private List<Planet> deepCopyToList(ObservableCollection<Planet> thePlanets)
+        {
+            var aReturn = new List<Planet>();
+            foreach (var aPlanet in thePlanets)
+            {
+                aReturn.Add(new Planet(aPlanet));
+            }
+            return aReturn;
         }
 
         private DispatcherTimer myRenderTimer;

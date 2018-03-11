@@ -36,6 +36,18 @@ namespace newton
             set { myGravitationalConstant = value; RaisePropertyChanged(); }
         }
 
+        public bool IsSimulationRunning
+        {
+            get;
+            set;
+        }
+
+        public CommandHandler SyncToSimulation
+        {
+            get;
+            set;
+        }
+
         public CommandHandler ApplyConstant
         {
             get;

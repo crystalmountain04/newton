@@ -1,4 +1,5 @@
-﻿using System;
+﻿using newton.Utility;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -11,7 +12,7 @@ using System.Xml.Serialization;
 
 namespace newton.Simulation
 {
-    public class Planet
+    public class Planet : ViewModelBase
     {
         public Planet()
         {
@@ -25,11 +26,19 @@ namespace newton.Simulation
             myColor = theColor;
         }
 
+        public Planet(Planet theCopy)
+        {
+            myMass = theCopy.myMass;
+            myLocation = new Point(theCopy.myLocation.X, theCopy.myLocation.Y);
+            myAcceleration = new Point(theCopy.myAcceleration.X, theCopy.myAcceleration.Y);
+            myColor = theCopy.myColor;
+        }
+
         private Point myLocation;
         public Point Location
         {
             get { return myLocation; }
-            set { myLocation = value; }
+            set { myLocation = value; RaisePropertyChanged(); RaisePropertyChanged(nameof(DisplayedLocation)); }
         }
 
         public Point DisplayedLocation

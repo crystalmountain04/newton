@@ -26,41 +26,80 @@ namespace newton
             InitializeComponent();
         }
 
+        private MainWindowViewModel ViewModel
+        {
+            get { return (this.DataContext as MainWindowViewModel); }
+        }
+
         private bool myIsDragging = false;
-        private Planet myDraggedPlanet = null; 
+        private Planet myDraggedPlanet = null;
+        private bool myWasSimulationRunning = false;
 
         private void Ellipse_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            var aCapturedEllipse = (sender as Ellipse);
-            if (null != aCapturedEllipse)
-            {
-                myDraggedPlanet = aCapturedEllipse.DataContext as Planet;
-                myIsDragging = true;
-                myHost.MouseMove += ACapturedEllipse_MouseMove;
-                myHost.MouseLeftButtonUp += ACapturedEllipse_MouseLeftButtonUp;
-            }
+            startDragMode(sender as Ellipse);
         }
 
-        private void ACapturedEllipse_MouseMove(object sender, MouseEventArgs e)
+        private void MainWindow_MouseMove(object sender, MouseEventArgs e)
         {
-            if ( myIsDragging)
-            {
-                var aViewModel = this.DataContext as MainWindowViewModel;
-                var aUnflippedPosition = e.GetPosition(myHost);
-                var aFlippedPosition = new Point(aUnflippedPosition.X, aViewModel.SandBoxSize - aUnflippedPosition.Y);
+            executeMove(e.GetPosition(myHost));
+        }
 
-                myDraggedPlanet.Location = aFlippedPosition;
+        private void MainWindow_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            stopDragMode();
+        }
+
+        private void executeMove(Point theNewPosition)
+        {
+            if (myIsDragging)
+            {
+                var aUnflippedPosition = theNewPosition;
+                var aFlippedPosition = new Point(aUnflippedPosition.X, ViewModel.SandBoxSize - aUnflippedPosition.Y);
+
+                if (myDraggedPlanet != null)
+                {
+                    myDraggedPlanet.Location = aFlippedPosition;
+                }
+                else
+                {
+                    stopDragMode();
+                }
             }
         }
 
-        private void ACapturedEllipse_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        private void startDragMode(Ellipse theDraggedEllipse)
+        {
+            myWasSimulationRunning = ViewModel.IsSimulationRunning;
+            if (ViewModel.IsSimulationRunning && ViewModel.Stop.CanExecute(null))
+            {
+                ViewModel.Stop.Execute(null);
+            }
+
+            if (!myIsDragging)
+            {
+                myIsDragging = true;
+                myDraggedPlanet = theDraggedEllipse.DataContext as Planet;
+                this.PreviewMouseMove += MainWindow_MouseMove;
+                this.PreviewMouseLeftButtonUp += MainWindow_MouseLeftButtonUp;
+            }
+        }
+
+        private void stopDragMode()
         {
             if (myIsDragging)
             {
                 myIsDragging = false;
                 myDraggedPlanet = null;
-                myHost.MouseMove -= ACapturedEllipse_MouseMove;
-                myHost.MouseLeftButtonUp -= ACapturedEllipse_MouseLeftButtonUp;
+                (this.DataContext as MainWindowViewModel).SyncToSimulation.Execute(null);
+                this.PreviewMouseMove -= MainWindow_MouseMove;
+                this.PreviewMouseLeftButtonUp -= MainWindow_MouseLeftButtonUp;
+            }
+
+            if(myWasSimulationRunning && ViewModel.Start.CanExecute(null))
+            {
+                myWasSimulationRunning = false;
+                ViewModel.Start.Execute(null);
             }
         }
     }
