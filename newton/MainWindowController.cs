@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using newton.Simulation;
 using newton.Utility;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,7 @@ namespace newton
 {
     public class MainWindowController
     {
-        private Simulation mySimulation;
+        private SimulationEngine mySimulation;
 
         public MainWindowController()
         {
@@ -26,7 +27,7 @@ namespace newton
 
         public void Initialize(Configuration theConfiguration)
         {
-            mySimulation = new Simulation();
+            mySimulation = new SimulationEngine();
             mySimulation.Initialize(UniverseFactory.CreateUniverse(theConfiguration));
 
             applyConfigurationToViewModel(theConfiguration);

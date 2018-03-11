@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
 
-namespace newton
+namespace newton.Simulation
 {
-    public class Simulation
+    public class SimulationEngine
     {
         public void Initialize(Universe theUniverseToSimulate)
         {

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Xml.Serialization;
 
-namespace newton
+namespace newton.Simulation
 {
     public class Planet
     {

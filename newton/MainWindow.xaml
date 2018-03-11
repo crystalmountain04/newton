@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:newton"
+        xmlns:simulation="clr-namespace:newton.Simulation"
         mc:Ignorable="d"
         Title="MainWindow" Height="800" Width="800" Background="Black">
     <Grid>
@@ -20,7 +21,7 @@
                 </Style>
             </ItemsControl.ItemContainerStyle>
             <ItemsControl.ItemTemplate>
-                <DataTemplate DataType="{x:Type local:Planet}">
+                <DataTemplate DataType="{x:Type simulation:Planet}">
                     <Ellipse Width="{Binding DisplayedSize}" Height="{Binding DisplayedSize}" MouseLeftButtonDown="Ellipse_MouseLeftButtonDown" StrokeThickness="1" Stroke="{Binding Color}" Fill="{Binding Color}" />
                 </DataTemplate>
             </ItemsControl.ItemTemplate>

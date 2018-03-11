@@ -55,9 +55,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Utility\MathHelper.cs" />
-    <Compile Include="Simulation.cs" />
-    <Compile Include="Universe.cs" />
-    <Compile Include="UniverseFactory.cs" />
+    <Compile Include="Simulation\SimulationEngine.cs" />
+    <Compile Include="Simulation\Universe.cs" />
+    <Compile Include="Simulation\UniverseFactory.cs" />
     <Compile Include="Utility\ViewModelBase.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -68,7 +68,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Utility\CommandHandler.cs" />
-    <Compile Include="Configuration.cs" />
+    <Compile Include="Simulation\Configuration.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -77,7 +77,7 @@
   <ItemGroup>
     <Compile Include="MainWindowController.cs" />
     <Compile Include="MainWindowViewModel.cs" />
-    <Compile Include="Planet.cs" />
+    <Compile Include="Simulation\Planet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
