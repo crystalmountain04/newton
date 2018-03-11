@@ -12,7 +12,7 @@ namespace newton
         {
         }
 
-        public Configuration(int theTimeStep_ms, int theSandBoxSize_px, double theGravitationConstant, double theCollisionThreshold)
+        public Configuration(double theTimeStep_ms, int theSandBoxSize_px, double theGravitationConstant, double theCollisionThreshold)
         {
             TimeStep_ms = theTimeStep_ms;
             SandboxSize_px = theSandBoxSize_px;
@@ -26,7 +26,7 @@ namespace newton
             set;
         }
 
-        public int TimeStep_ms
+        public double TimeStep_ms
         {
             get;
             set;

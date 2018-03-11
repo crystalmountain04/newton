@@ -11,7 +11,7 @@ using System.Xml.Serialization;
 
 namespace newton
 {
-    public class Planet : INotifyPropertyChanged
+    public class Planet
     {
         public Planet()
         {
@@ -29,7 +29,7 @@ namespace newton
         public Point Location
         {
             get { return myLocation; }
-            set { myLocation = value; RaisePropertyChanged(); RaisePropertyChanged(nameof(DisplayedLocation)); }
+            set { myLocation = value; }
         }
 
         public Point DisplayedLocation
@@ -41,14 +41,14 @@ namespace newton
         public Point Acceleration
         {
             get { return myAcceleration; }
-            set { myAcceleration = value; RaisePropertyChanged(); }
+            set { myAcceleration = value; }
         }
 
         private double myMass;
         public double Mass
         {
             get { return myMass; }
-            set { myMass = value; RaisePropertyChanged(); RaisePropertyChanged(nameof(DisplayedSize)); }
+            set { myMass = value; }
         }
 
         public double DisplayedSize
@@ -60,18 +60,7 @@ namespace newton
         public string Color
         {
             get { return myColor; }
-            set { myColor = value; RaisePropertyChanged(); }
+            set { myColor = value; }
         }
-
-        #region INotifyPropertyChanged implementation
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void RaisePropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        #endregion
     }
 }

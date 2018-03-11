@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace newton
 {
@@ -15,10 +16,11 @@ namespace newton
     {
         public void Initialize(Configuration theConfiguration)
         {
-            myConfig = theConfiguration;
+            myUniverse = new Universe();
+            myUniverse.Configuration = theConfiguration;
             ViewModel.SandBoxSize = theConfiguration.SandboxSize_px;
             ViewModel.GravitationalConstant = theConfiguration.GravitationConstant;
-            ViewModel.ApplyConstant = new CommandHandler(p => myConfig.GravitationConstant = ViewModel.GravitationalConstant, p => true);
+            ViewModel.ApplyConstant = new CommandHandler(p => myUniverse.Configuration.GravitationConstant = ViewModel.GravitationalConstant, p => true);
             ViewModel.Start = new CommandHandler(p => startSimulation(), p => !m_IsRunning);
             ViewModel.Stop = new CommandHandler(p => stopSimulation(), p => m_IsRunning);
             ViewModel.Reset = new CommandHandler(p => initPlanets(), p => true);
@@ -36,18 +38,21 @@ namespace newton
                 var aUniverse = new Universe(openFileDialog.FileName);
                 if(null != aUniverse)
                 {
-                    ViewModel.Planets = new ObservableCollection<Planet>(aUniverse.Planets);
-                    myConfig = aUniverse.Configuration;
-                    ViewModel.SandBoxSize = myConfig.SandboxSize_px;
-                    ViewModel.GravitationalConstant = myConfig.GravitationConstant;
+                    myUniverse.Planets = aUniverse.Planets;
+                    myUniverse.Configuration = aUniverse.Configuration;
+                    ViewModel.SandBoxSize = myUniverse.Configuration.SandboxSize_px;
+                    ViewModel.GravitationalConstant = myUniverse.Configuration.GravitationConstant;
                 }
             }
         }
 
+        private Universe myUniverse;
+
         private void startSimulation()
         {
             m_IsRunning = true;
-            m_Timer.Start();
+            myCalculateTimer.Start();
+            myRenderTimer.Start();
             ViewModel.Start.RaiseCanExecuteChanged();
             ViewModel.Stop.RaiseCanExecuteChanged();
         }
@@ -57,7 +62,7 @@ namespace newton
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             if (saveFileDialog.ShowDialog() == true)
             {
-                var aUniverse = new Universe(ViewModel.Planets.ToList(), myConfig);
+                var aUniverse = new Universe(myUniverse.Planets.ToList(), myUniverse.Configuration);
                 aUniverse.Save(saveFileDialog.FileName);
             }
         }
@@ -65,49 +70,67 @@ namespace newton
         private void stopSimulation()
         {
             m_IsRunning = false;
-            m_Timer.Stop();
+            myCalculateTimer.Stop();
+            myRenderTimer.Stop();
             ViewModel.Start.RaiseCanExecuteChanged();
             ViewModel.Stop.RaiseCanExecuteChanged();
         }
 
         private bool m_IsRunning = false;
 
-        Configuration myConfig;
         private void initPlanets()
         {
             var aPlanets = new List<Planet>();
 
-            aPlanets.Add(new Planet(50000, new Point(myConfig.SandboxSize_px *0.5, myConfig.SandboxSize_px * 0.5), new Point(0, 0), "Yellow"));
-            //aPlanets.Add(new Planet(30, new Point(myConfig.SandboxSize_px - 30, 0), new Point(0, 30), "Turquoise"));
-            //aPlanets.Add(new Planet(30, new Point(0, myConfig.SandboxSize_px - 30), new Point(0, -30), "Magenta"));
-            //aPlanets.Add(new Planet(20, new Point(0, 0), new Point(20, 5), "Green"));
-            //aPlanets.Add(new Planet(10, new Point(myConfig.SandboxSize_px - 10, myConfig.SandboxSize_px - 10), new Point(-10, 0), "Red"));
+            aPlanets.Add(new Planet(50000, new Point(myUniverse.Configuration.SandboxSize_px *0.5, myUniverse.Configuration.SandboxSize_px * 0.5), new Point(0, 0), "Yellow"));
+            aPlanets.Add(new Planet(30, new Point(myUniverse.Configuration.SandboxSize_px - 200, 100), new Point(20, 30), "Turquoise"));
+            aPlanets.Add(new Planet(30, new Point(100, myUniverse.Configuration.SandboxSize_px - 220), new Point(0, -30), "Magenta"));
+            aPlanets.Add(new Planet(20, new Point(105, 103), new Point(20, 5), "Green"));
+            aPlanets.Add(new Planet(10, new Point(myUniverse.Configuration.SandboxSize_px - 123, myUniverse.Configuration.SandboxSize_px - 142), new Point(-10, 0), "Red"));
 
-            Random aRandom = new Random();
-            for (int i = 0; i < 20; i++)
-            {
-                var aLocX = aRandom.Next(0, myConfig.SandboxSize_px);
-                var aLocY = aRandom.Next(0, myConfig.SandboxSize_px);
-                var aMass = aRandom.Next(30, 50);
-                var aAccX = aRandom.Next(-100, 100);
-                var aAccY = aRandom.Next(-100, 100);
-                aPlanets.Add(new Planet(aMass, new Point(aLocX, aLocY), new Point(aAccX, aAccY), "White"));
-            }
+            //Random aRandom = new Random();
+            //for (int i = 0; i < 1000; i++)
+            //{
+            //    var aLocX = aRandom.Next(0, myUniverse.Configuration.SandboxSize_px);
+            //    var aLocY = aRandom.Next(0, myUniverse.Configuration.SandboxSize_px);
+            //    var aMass = aRandom.Next(30, 50);
+            //    var aAccX = aRandom.Next(-100, 100);
+            //    var aAccY = aRandom.Next(-100, 100);
+            //    aPlanets.Add(new Planet(aMass, new Point(aLocX, aLocY), new Point(aAccX, aAccY), "White"));
+            //}
 
-            ViewModel.Planets = new ObservableCollection<Planet>(aPlanets);
+            myUniverse.Planets = aPlanets;
+            displayUniverse(myUniverse);
         }
 
         private void initTimer()
         {
-            m_Timer = new Timer(myConfig.TimeStep_ms);
-            m_Timer.Elapsed += M_Timer_Elapsed;
+            myCalculateTimer = new Timer(myUniverse.Configuration.TimeStep_ms);
+            myCalculateTimer.Elapsed += MyCalculateTimer_Elapsed;
+
+            myRenderTimer = new DispatcherTimer();
+            myRenderTimer.Interval = new TimeSpan(0, 0, 0, 0, 20);
+            myRenderTimer.Tick += MyRenderTimer_Tick;
         }
 
-        private void M_Timer_Elapsed(object sender, ElapsedEventArgs e)
+        private async void MyRenderTimer_Tick(object sender, EventArgs e)
         {
-            foreach (var aPlanet in ViewModel.Planets)
+            await displayUniverse(myUniverse);
+        }
+
+        private Task displayUniverse(Universe theUniverseToDisplay)
+        {
+            return Task.Run(() =>
             {
-                foreach (var aOtherPlanet in ViewModel.Planets)
+                ViewModel.Planets = new ObservableCollection<Planet>(theUniverseToDisplay.Planets);
+            });
+        }
+
+        private void MyCalculateTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            foreach (var aPlanet in myUniverse.Planets)
+            {
+                foreach (var aOtherPlanet in myUniverse.Planets)
                 {
                     if (aOtherPlanet != aPlanet)
                     {
@@ -116,7 +139,7 @@ namespace newton
                 }
             }
 
-            foreach (var aPlanet in ViewModel.Planets)
+            foreach (var aPlanet in myUniverse.Planets)
             {
                 applyAcceleration(aPlanet);
             }
@@ -133,10 +156,10 @@ namespace newton
             var aDiff = getDiffVector(thePlanetToUpdate.Location, theOtherPlanet.Location);
             var aDistance = getDistance(thePlanetToUpdate.Location, theOtherPlanet.Location);
             var aNorm = (aDistance * aDistance * aDistance);
-            var aNewAcc = new Point(myConfig.GravitationConstant * thePlanetToUpdate.Mass * theOtherPlanet.Mass * aDiff.X / aNorm,
-                myConfig.GravitationConstant * thePlanetToUpdate.Mass * theOtherPlanet.Mass * aDiff.Y / aNorm);
+            var aNewAcc = new Point(myUniverse.Configuration.GravitationConstant * thePlanetToUpdate.Mass * theOtherPlanet.Mass * aDiff.X / aNorm,
+                myUniverse.Configuration.GravitationConstant * thePlanetToUpdate.Mass * theOtherPlanet.Mass * aDiff.Y / aNorm);
 
-            if (aDistance > myConfig.CollisionThreshold)
+            if (aDistance > myUniverse.Configuration.CollisionThreshold)
             {
                 thePlanetToUpdate.Acceleration = addPoints(thePlanetToUpdate.Acceleration, aNewAcc);
             }
@@ -169,7 +192,8 @@ namespace newton
             return Math.Sqrt(aDiff.X * aDiff.X + aDiff.Y * aDiff.Y);
         }
 
-        private Timer m_Timer;
+        private Timer myCalculateTimer;
+        private DispatcherTimer myRenderTimer;
 
         internal MainWindowViewModel ViewModel
         {
