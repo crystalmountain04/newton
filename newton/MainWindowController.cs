@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using newton.Utility;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

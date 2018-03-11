@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace newton
+namespace newton.Utility
 {
     public class CommandHandler : ICommand
     {

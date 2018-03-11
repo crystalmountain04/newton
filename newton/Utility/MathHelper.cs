@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace newton
+namespace newton.Utility
 {
     public static class MathHelper
     {
