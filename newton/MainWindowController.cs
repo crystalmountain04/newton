@@ -27,22 +27,32 @@ namespace newton
 
         public void Initialize(Configuration theConfiguration)
         {
+            initCommands();
+
             mySimulation = new SimulationEngine();
             mySimulation.Initialize(UniverseFactory.CreateUniverse(theConfiguration));
 
-            applyConfigurationToViewModel(theConfiguration);
-
-            ViewModel.ApplyConstant = new CommandHandler(p => mySimulation.Universe.Configuration.GravitationConstant = ViewModel.GravitationalConstant, p => true);
-            ViewModel.Start = new CommandHandler(p => startSimulation(), p => !m_IsRunning);
-            ViewModel.Stop = new CommandHandler(p => stopSimulation(), p => m_IsRunning);
-            ViewModel.Reset = new CommandHandler(p => mySimulation.Initialize(UniverseFactory.CreateUniverse(mySimulation.Universe.Configuration)), p => true);
-            ViewModel.Save = new CommandHandler(p => saveUniverse(), p => true);
-            ViewModel.Load = new CommandHandler(p => loadUniverse(), p => true);
-
+            configureVisualization(theConfiguration);
             displayUniverse(mySimulation.Universe);
         }
 
-        private void loadUniverse()
+        private void initCommands()
+        {
+            ViewModel.ApplyConstant = new CommandHandler(p => mySimulation.ApplyGravitationConstant(ViewModel.GravitationalConstant), p => true);
+            ViewModel.Start = new CommandHandler(p => startSimulation(), p => !mySimulation.IsRunning);
+            ViewModel.Stop = new CommandHandler(p => stopSimulation(), p => mySimulation.IsRunning);
+            ViewModel.Reset = new CommandHandler(p => resetSimulation(), p => true);
+            ViewModel.Save = new CommandHandler(p => saveUniverseToFile(), p => true);
+            ViewModel.Load = new CommandHandler(p => openUniverseFromFile(), p => true);
+        }
+
+        private void resetSimulation()
+        {
+            mySimulation.Initialize(UniverseFactory.CreateUniverse(mySimulation.Universe.Configuration));
+            displayUniverse(mySimulation.Universe);
+        }
+
+        private void openUniverseFromFile()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             if (openFileDialog.ShowDialog() == true)
@@ -50,14 +60,23 @@ namespace newton
                 var aUniverse = new Universe(openFileDialog.FileName);
                 if(null != aUniverse)
                 {
-                    mySimulation.Universe.Planets = aUniverse.Planets;
-                    mySimulation.Universe.Configuration = aUniverse.Configuration;
-                    applyConfigurationToViewModel(mySimulation.Universe.Configuration);
+                    mySimulation.Initialize(aUniverse);
+                    configureVisualization(aUniverse.Configuration);
+                    displayUniverse(mySimulation.Universe);
                 }
             }
         }
 
-        private void applyConfigurationToViewModel(Configuration theConfiguration)
+        private void saveUniverseToFile()
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                mySimulation.Universe.Save(saveFileDialog.FileName);
+            }
+        }
+
+        private void configureVisualization(Configuration theConfiguration)
         {
             ViewModel.SandBoxSize = theConfiguration.SandboxSize_px;
             ViewModel.GravitationalConstant = theConfiguration.GravitationConstant;
@@ -65,33 +84,23 @@ namespace newton
 
         private void startSimulation()
         {
-            m_IsRunning = true;
             mySimulation.StartSimulation();
             myRenderTimer.Start();
-            ViewModel.Start.RaiseCanExecuteChanged();
-            ViewModel.Stop.RaiseCanExecuteChanged();
-        }
-
-        private void saveUniverse()
-        {
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            if (saveFileDialog.ShowDialog() == true)
-            {
-                var aUniverse = new Universe(mySimulation.Universe.Planets.ToList(), mySimulation.Universe.Configuration);
-                aUniverse.Save(saveFileDialog.FileName);
-            }
+            updateCommandAvailability();
         }
 
         private void stopSimulation()
         {
-            m_IsRunning = false;
             mySimulation.StopSimulation();
             myRenderTimer.Stop();
+            updateCommandAvailability();
+        }
+
+        private void updateCommandAvailability()
+        {
             ViewModel.Start.RaiseCanExecuteChanged();
             ViewModel.Stop.RaiseCanExecuteChanged();
         }
-
-        private bool m_IsRunning = false;
 
         private async void MyRenderTimer_Tick(object sender, EventArgs e)
         {

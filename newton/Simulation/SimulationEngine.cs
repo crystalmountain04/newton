@@ -13,6 +13,7 @@ namespace newton.Simulation
     {
         public void Initialize(Universe theUniverseToSimulate)
         {
+            IsRunning = false;
             if (null != myCalculateTimer)
             {
                 myCalculateTimer.Elapsed -= MyCalculateTimer_Elapsed;
@@ -32,12 +33,25 @@ namespace newton.Simulation
 
         public void StartSimulation()
         {
+            IsRunning = true;
             myCalculateTimer.Start();
         }
 
         public void StopSimulation()
         {
+            IsRunning = false;
             myCalculateTimer.Stop();
+        }
+
+        public bool IsRunning
+        {
+            get;
+            private set;
+        }
+
+        public void ApplyGravitationConstant(double theConstant)
+        {
+            Universe.Configuration.GravitationConstant = theConstant;
         }
 
         private void MyCalculateTimer_Elapsed(object sender, ElapsedEventArgs e)
