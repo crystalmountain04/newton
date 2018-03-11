@@ -54,6 +54,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Utility\Helper.cs" />
     <Compile Include="Utility\MathHelper.cs" />
     <Compile Include="Simulation\SimulationEngine.cs" />
     <Compile Include="Simulation\Universe.cs" />

@@ -63,6 +63,7 @@ namespace newton
                 if(null != aUniverse)
                 {
                     mySimulation.Initialize(aUniverse);
+                    updateCommandAvailability();
                     configureVisualization(aUniverse.Configuration);
                     displayUniverse(mySimulation.Universe);
                 }
@@ -80,7 +81,7 @@ namespace newton
 
         private void syncToSimulation()
         {
-            mySimulation.Universe.Planets = deepCopyToList(ViewModel.Planets);
+            mySimulation.Universe.Planets = Helper.DeepCopyToList(ViewModel.Planets);
         }
 
         private void configureVisualization(Configuration theConfiguration)
@@ -118,27 +119,7 @@ namespace newton
 
         private void displayUniverse(Universe theUniverseToDisplay)
         {
-            ViewModel.Planets = deepCopyToObservableCollection(theUniverseToDisplay.Planets);
-        }
-
-        private ObservableCollection<Planet> deepCopyToObservableCollection(List<Planet> thePlanets)
-        {
-            var aReturn = new ObservableCollection<Planet>();
-            foreach (var aPlanet in thePlanets)
-            {
-                aReturn.Add(new Planet(aPlanet));
-            }
-            return aReturn;
-        }
-
-        private List<Planet> deepCopyToList(ObservableCollection<Planet> thePlanets)
-        {
-            var aReturn = new List<Planet>();
-            foreach (var aPlanet in thePlanets)
-            {
-                aReturn.Add(new Planet(aPlanet));
-            }
-            return aReturn;
+            ViewModel.Planets = Helper.DeepCopyToObservableCollection(theUniverseToDisplay.Planets);
         }
 
         private DispatcherTimer myRenderTimer;
