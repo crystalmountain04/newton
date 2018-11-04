@@ -71,5 +71,12 @@ namespace newton.Simulation
             get { return myColor; }
             set { myColor = value; }
         }
+
+        private bool myIsNotInteracting;
+        public bool IsDoomed
+        {
+            get { return myIsNotInteracting; }
+            set { myIsNotInteracting = value; }
+        }
     }
 }

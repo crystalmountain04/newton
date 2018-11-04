@@ -22,8 +22,8 @@ namespace newton
             set { mySandBoxSize = value; RaisePropertyChanged(); }
         }
 
-        private ObservableCollection<Planet> myPlanets;
-        public ObservableCollection<Planet> Planets
+        private List<Planet> myPlanets;
+        public List<Planet> Planets
         {
             get { return myPlanets; }
             set { myPlanets = value; RaisePropertyChanged(); }

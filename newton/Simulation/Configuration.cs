@@ -12,12 +12,19 @@ namespace newton.Simulation
         {
         }
 
-        public Configuration(double theTimeStep_ms, int theSandBoxSize_px, double theGravitationConstant, double theCollisionThreshold)
+        public Configuration(double theTimeStep_ms, int theSandBoxSize_px, double theGravitationConstant, double theCollisionThreshold, double theEventHorizon)
         {
             TimeStep_ms = theTimeStep_ms;
             SandboxSize_px = theSandBoxSize_px;
             GravitationConstant = theGravitationConstant;
             CollisionThreshold = theCollisionThreshold;
+            EventHorizon = theEventHorizon;
+        }
+
+        public double EventHorizon
+        {
+            get;
+            set;
         }
 
         public double CollisionThreshold

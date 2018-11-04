@@ -54,22 +54,43 @@ namespace newton.Simulation
             Universe.Configuration.GravitationConstant = theConstant;
         }
 
+        private static object myLock = new object();
+
         private void MyCalculateTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            foreach (var aPlanet in Universe.Planets)
+            lock (myLock)
             {
-                foreach (var aOtherPlanet in Universe.Planets)
+                var aPlanetsToRemove = new List<Planet>();
+                foreach (var aPlanet in Universe.Planets)
                 {
-                    if (aOtherPlanet != aPlanet)
+                    if (!aPlanet.IsDoomed)
                     {
-                        updateAcceleration(aPlanet, aOtherPlanet);
+                        foreach (var aOtherPlanet in Universe.Planets)
+                        {
+                            if (aOtherPlanet != aPlanet && !aOtherPlanet.IsDoomed)
+                            {
+                                updateAcceleration(aPlanet, aOtherPlanet);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        aPlanetsToRemove.Add(aPlanet);
                     }
                 }
-            }
 
-            foreach (var aPlanet in Universe.Planets)
-            {
-                applyAcceleration(aPlanet);
+                foreach (var aPlanet in aPlanetsToRemove)
+                {
+                    Universe.Planets.Remove(aPlanet);
+                }
+
+                foreach (var aPlanet in Universe.Planets)
+                {
+                    if (!aPlanet.IsDoomed)
+                    {
+                        applyAcceleration(aPlanet);
+                    }
+                }
             }
         }
 
@@ -77,6 +98,15 @@ namespace newton.Simulation
         {
             var aAccWithMass = new Point(thePlanetToMove.Acceleration.X / thePlanetToMove.Mass, thePlanetToMove.Acceleration.Y / thePlanetToMove.Mass);
             thePlanetToMove.Location = MathHelper.AddPoints(thePlanetToMove.Location, aAccWithMass);
+            thePlanetToMove.IsDoomed = hasPlanetCrossedEventHorizon(thePlanetToMove.Location);
+        }
+
+        private bool hasPlanetCrossedEventHorizon(Point thePlanetLocation)
+        {
+            return (thePlanetLocation.X > Universe.Configuration.EventHorizon ||
+                    thePlanetLocation.X < -Universe.Configuration.EventHorizon ||
+                    thePlanetLocation.Y > Universe.Configuration.EventHorizon ||
+                    thePlanetLocation.Y < -Universe.Configuration.EventHorizon);
         }
 
         private void updateAcceleration(Planet thePlanetToUpdate, Planet theOtherPlanet)

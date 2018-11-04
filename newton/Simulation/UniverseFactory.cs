@@ -30,8 +30,8 @@ namespace newton.Simulation
             //Random aRandom = new Random();
             //for (int i = 0; i < 1000; i++)
             //{
-            //    var aLocX = aRandom.Next(0, myUniverse.Configuration.SandboxSize_px);
-            //    var aLocY = aRandom.Next(0, myUniverse.Configuration.SandboxSize_px);
+            //    var aLocX = aRandom.Next(0, theConfiguration.SandboxSize_px);
+            //    var aLocY = aRandom.Next(0, theConfiguration.SandboxSize_px);
             //    var aMass = aRandom.Next(30, 50);
             //    var aAccX = aRandom.Next(-100, 100);
             //    var aAccY = aRandom.Next(-100, 100);

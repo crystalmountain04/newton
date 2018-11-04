@@ -81,7 +81,7 @@ namespace newton
 
         private void syncToSimulation()
         {
-            mySimulation.Universe.Planets = Helper.DeepCopyToList(ViewModel.Planets);
+            mySimulation.Universe.Planets = Helper.DeepCopy(ViewModel.Planets);
         }
 
         private void configureVisualization(Configuration theConfiguration)
@@ -119,7 +119,7 @@ namespace newton
 
         private void displayUniverse(Universe theUniverseToDisplay)
         {
-            ViewModel.Planets = Helper.DeepCopyToObservableCollection(theUniverseToDisplay.Planets);
+            ViewModel.Planets = theUniverseToDisplay.Planets;
         }
 
         private DispatcherTimer myRenderTimer;

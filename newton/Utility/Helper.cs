@@ -29,5 +29,15 @@ namespace newton.Utility
             }
             return aReturn;
         }
+
+        public static List<Planet> DeepCopy(List<Planet> thePlanets)
+        {
+            var aReturn = new List<Planet>();
+            foreach (var aPlanet in thePlanets)
+            {
+                aReturn.Add(new Planet(aPlanet));
+            }
+            return aReturn;
+        }
     }
 }
