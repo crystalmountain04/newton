@@ -63,20 +63,13 @@ namespace newton.Services
                 var aPlanetsToRemove = new List<Planet>();
                 foreach (var aPlanet in Universe.Planets)
                 {
-                    if (!aPlanet.IsDoomed)
-                    {
-                        foreach (var aOtherPlanet in Universe.Planets)
-                        {
-                            if (aOtherPlanet != aPlanet && !aOtherPlanet.IsDoomed)
-                            {
-                                updateAcceleration(aPlanet, aOtherPlanet);
-                            }
-                        }
-                    }
-                    else
+                    if (aPlanet.IsDoomed)
                     {
                         aPlanetsToRemove.Add(aPlanet);
+                        continue;
                     }
+
+                    calculateInteractions(aPlanet);
                 }
 
                 foreach (var aPlanet in aPlanetsToRemove)
@@ -91,6 +84,19 @@ namespace newton.Services
                         applyAcceleration(aPlanet);
                     }
                 }
+            }
+        }
+
+        private void calculateInteractions(Planet thePlanet)
+        {
+            foreach (var aOtherPlanet in Universe.Planets)
+            {
+                if (aOtherPlanet.IsDoomed || aOtherPlanet == thePlanet)
+                {
+                    continue;
+                }
+
+                updateAcceleration(thePlanet, aOtherPlanet);
             }
         }
 
