@@ -13,10 +13,8 @@ namespace newton
         {
             var aView = new MainWindow();
             var aViewModel = new MainWindowViewModel();
-            var aController = new MainWindowController();
             aView.DataContext = aViewModel;
-            aController.ViewModel = aViewModel;
-            aController.Initialize(new SimulationSzenario(0.005, 500, -0.01, 5, 1000));
+            aViewModel.Initialize(new SimulationSzenario(0.005, 500, -0.01, 5, 1000));
             aView.Show();
         }
     }
