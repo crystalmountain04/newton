@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using CommunityToolkit.Mvvm.Input;
+using Microsoft.Win32;
 using newton.Simulation;
 using newton.Utility;
 using System;
@@ -38,13 +39,13 @@ namespace newton
 
         private void initCommands()
         {
-            ViewModel.ApplyConstant = new CommandHandler(p => mySimulation.ApplyGravitationConstant(ViewModel.GravitationalConstant), p => true);
-            ViewModel.Start = new CommandHandler(p => startSimulation(), p => !mySimulation.IsRunning);
-            ViewModel.Stop = new CommandHandler(p => stopSimulation(), p => mySimulation.IsRunning);
-            ViewModel.Reset = new CommandHandler(p => resetSimulation(), p => true);
-            ViewModel.Save = new CommandHandler(p => saveUniverseToFile(), p => true);
-            ViewModel.Load = new CommandHandler(p => openUniverseFromFile(), p => true);
-            ViewModel.SyncToSimulation = new CommandHandler(p => syncToSimulation(), p => true);
+            ViewModel.ApplyConstant = new RelayCommand(() => mySimulation.ApplyGravitationConstant(ViewModel.GravitationalConstant), () => true);
+            ViewModel.Start = new RelayCommand(() => startSimulation(), () => !mySimulation.IsRunning);
+            ViewModel.Stop = new RelayCommand(() => stopSimulation(), () => mySimulation.IsRunning);
+            ViewModel.Reset = new RelayCommand(() => resetSimulation(), () => true);
+            ViewModel.Save = new RelayCommand(() => saveUniverseToFile(), () => true);
+            ViewModel.Load = new RelayCommand(() => openUniverseFromFile(), () => true);
+            ViewModel.SyncToSimulation = new RelayCommand(() => syncToSimulation(), () => true);
         }
 
         private void resetSimulation()
@@ -108,8 +109,8 @@ namespace newton
 
         private void updateCommandAvailability()
         {
-            ViewModel.Start.RaiseCanExecuteChanged();
-            ViewModel.Stop.RaiseCanExecuteChanged();
+            ViewModel.Start.NotifyCanExecuteChanged();
+            ViewModel.Stop.NotifyCanExecuteChanged();
         }
 
         private void MyRenderTimer_Tick(object sender, EventArgs e)

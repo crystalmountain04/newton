@@ -1,4 +1,6 @@
-﻿using newton.Simulation;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using newton.Simulation;
 using newton.Utility;
 using System;
 using System.Collections.Generic;
@@ -13,27 +15,27 @@ using System.Windows.Input;
 
 namespace newton
 {
-    public class MainWindowViewModel : ViewModelBase
+    public class MainWindowViewModel : ObservableObject
     {
         private int mySandBoxSize;
         public int SandBoxSize
         {
-            get { return mySandBoxSize; }
-            set { mySandBoxSize = value; RaisePropertyChanged(); }
+            get => mySandBoxSize;
+            set => SetProperty(ref mySandBoxSize, value);
         }
 
-        private List<Planet> myPlanets;
+        private List<Planet> myPlanets = new List<Planet>();
         public List<Planet> Planets
         {
-            get { return myPlanets; }
-            set { myPlanets = value; RaisePropertyChanged(); }
+            get => myPlanets;
+            set => SetProperty(ref myPlanets, value);
         }
 
         private double myGravitationalConstant;
         public double GravitationalConstant
         {
-            get { return myGravitationalConstant; }
-            set { myGravitationalConstant = value; RaisePropertyChanged(); }
+            get => myGravitationalConstant;
+            set => SetProperty(ref myGravitationalConstant, value);
         }
 
         public bool IsSimulationRunning
@@ -42,43 +44,43 @@ namespace newton
             set;
         }
 
-        public CommandHandler SyncToSimulation
+        public RelayCommand SyncToSimulation
         {
             get;
             set;
         }
 
-        public CommandHandler ApplyConstant
+        public RelayCommand ApplyConstant
         {
             get;
             set;
         }
 
-        public CommandHandler Start
+        public RelayCommand Start
         {
             get;
             set;
         }
 
-        public CommandHandler Stop
+        public RelayCommand Stop
         {
             get;
             set;
         }
 
-        public CommandHandler Reset
+        public RelayCommand Reset
         {
             get;
             set;
         }
 
-        public CommandHandler Save
+        public RelayCommand Save
         {
             get;
             set;
         }
 
-        public CommandHandler Load
+        public RelayCommand Load
         {
             get;
             set;

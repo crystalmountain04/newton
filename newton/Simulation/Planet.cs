@@ -1,4 +1,5 @@
-﻿using newton.Utility;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using newton.Utility;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,7 +13,7 @@ using System.Xml.Serialization;
 
 namespace newton.Simulation
 {
-    public class Planet : ViewModelBase
+    public class Planet : ObservableObject
     {
         public Planet()
         {
@@ -37,8 +38,12 @@ namespace newton.Simulation
         private Point myLocation;
         public Point Location
         {
-            get { return myLocation; }
-            set { myLocation = value; RaisePropertyChanged(); RaisePropertyChanged(nameof(DisplayedLocation)); }
+            get => myLocation;
+            set
+            {
+                SetProperty(ref myLocation, value);
+                OnPropertyChanged(nameof(DisplayedLocation));
+            }
         }
 
         public Point DisplayedLocation
