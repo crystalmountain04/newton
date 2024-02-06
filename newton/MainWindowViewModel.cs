@@ -23,11 +23,13 @@ namespace newton
         private DispatcherTimer myRenderTimer;
         private readonly ISimulationService mySimulationService;
         private readonly IUniverseService myUniverseService;
+        private readonly IUserService myUserService;
 
-        public MainWindowViewModel( ISimulationService theSimulationEngine, IUniverseService theUniverseService )
+        public MainWindowViewModel( ISimulationService theSimulationEngine, IUniverseService theUniverseService, IUserService theUserService )
         {
             mySimulationService = theSimulationEngine;
             myUniverseService = theUniverseService;
+            myUserService = theUserService;
             ApplyConstant = new RelayCommand(() => mySimulationService?.ApplyGravitationConstant(GravitationalConstant));
             Start = new RelayCommand(startSimulation, () => mySimulationService != null && !mySimulationService.IsRunning);
             Stop = new RelayCommand(stopSimulation, () => mySimulationService != null && mySimulationService.IsRunning);
@@ -58,27 +60,31 @@ namespace newton
 
         private void openUniverseFromFile()
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            if (openFileDialog.ShowDialog() == true)
+            var aFileName = myUserService.OpenFile();
+            if (string.IsNullOrEmpty(aFileName))
             {
-                var aUniverse = myUniverseService.LoadUniverse(openFileDialog.FileName);
-                if (null != aUniverse)
-                {
-                    mySimulationService.Initialize(aUniverse);
-                    updateCommandAvailability();
-                    configureVisualization(aUniverse.Configuration);
-                    displayUniverse(mySimulationService.Universe);
-                }
+                return;
+            }
+
+            var aUniverse = myUniverseService.LoadUniverse(aFileName);
+            if (null != aUniverse)
+            {
+                mySimulationService.Initialize(aUniverse);
+                updateCommandAvailability();
+                configureVisualization(aUniverse.Configuration);
+                displayUniverse(mySimulationService.Universe);
             }
         }
 
         private void saveUniverseToFile()
         {
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            if (saveFileDialog.ShowDialog() == true)
+            var aFileName = myUserService.SaveFile();
+            if (string.IsNullOrEmpty(aFileName))
             {
-                myUniverseService.SaveUniverse(saveFileDialog.FileName, mySimulationService.Universe);
+                return;
             }
+
+            myUniverseService.SaveUniverse(aFileName, mySimulationService.Universe);
         }
 
         private void syncToSimulation()
