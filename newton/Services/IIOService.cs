@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace newton.Services
 {
-    public interface IUserService
+    public interface IIOService
     {
         string? OpenFile();
 

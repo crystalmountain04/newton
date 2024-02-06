@@ -1,35 +1,23 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.Win32;
 using newton.Services;
 using newton.Simulation;
-using newton.Utility;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Input;
 using System.Windows.Threading;
 
 namespace newton
 {
     public class MainWindowViewModel : ObservableObject
     {
-        private DispatcherTimer myRenderTimer;
+        private readonly DispatcherTimer myRenderTimer;
         private readonly ISimulationService mySimulationService;
         private readonly IUniverseService myUniverseService;
-        private readonly IUserService myUserService;
+        private readonly IIOService myIOService;
 
-        public MainWindowViewModel( ISimulationService theSimulationEngine, IUniverseService theUniverseService, IUserService theUserService )
+        public MainWindowViewModel( ISimulationService theSimulationEngine, IUniverseService theUniverseService, IIOService theIOService )
         {
             mySimulationService = theSimulationEngine;
             myUniverseService = theUniverseService;
-            myUserService = theUserService;
+            myIOService = theIOService;
             ApplyConstant = new RelayCommand(() => mySimulationService?.ApplyGravitationConstant(GravitationalConstant));
             Start = new RelayCommand(startSimulation, () => mySimulationService != null && !mySimulationService.IsRunning);
             Stop = new RelayCommand(stopSimulation, () => mySimulationService != null && mySimulationService.IsRunning);
@@ -60,7 +48,7 @@ namespace newton
 
         private void openUniverseFromFile()
         {
-            var aFileName = myUserService.OpenFile();
+            var aFileName = myIOService.OpenFile();
             if (string.IsNullOrEmpty(aFileName))
             {
                 return;
@@ -78,7 +66,7 @@ namespace newton
 
         private void saveUniverseToFile()
         {
-            var aFileName = myUserService.SaveFile();
+            var aFileName = myIOService.SaveFile();
             if (string.IsNullOrEmpty(aFileName))
             {
                 return;
