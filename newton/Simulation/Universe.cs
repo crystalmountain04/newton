@@ -13,7 +13,7 @@ namespace newton.Simulation
         {
         }
 
-        public Universe(List<Planet> thePlanets, Configuration theConfiguration)
+        public Universe(List<Planet> thePlanets, SimulationSzenario theConfiguration)
         {
             Planets = thePlanets;
             Configuration = theConfiguration;
@@ -35,7 +35,7 @@ namespace newton.Simulation
             set;
         }
 
-        public Configuration Configuration
+        public SimulationSzenario Configuration
         {
             get;
             set;

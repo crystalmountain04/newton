@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2026
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34525.116
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "newton", "newton\newton.csproj", "{4423E9D1-219A-414D-A831-76D1AB93F0A8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "newton", "newton\newton.csproj", "{FD713564-5CC1-4DED-847C-5672E72029D2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +11,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{4423E9D1-219A-414D-A831-76D1AB93F0A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4423E9D1-219A-414D-A831-76D1AB93F0A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4423E9D1-219A-414D-A831-76D1AB93F0A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4423E9D1-219A-414D-A831-76D1AB93F0A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD713564-5CC1-4DED-847C-5672E72029D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD713564-5CC1-4DED-847C-5672E72029D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD713564-5CC1-4DED-847C-5672E72029D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD713564-5CC1-4DED-847C-5672E72029D2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

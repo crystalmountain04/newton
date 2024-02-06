@@ -26,7 +26,7 @@ namespace newton
             myRenderTimer.Tick += MyRenderTimer_Tick;
         }
 
-        public void Initialize(Configuration theConfiguration)
+        public void Initialize(SimulationSzenario theConfiguration)
         {
             initCommands();
 
@@ -85,7 +85,7 @@ namespace newton
             mySimulation.Universe.Planets = Helper.DeepCopy(ViewModel.Planets);
         }
 
-        private void configureVisualization(Configuration theConfiguration)
+        private void configureVisualization(SimulationSzenario theConfiguration)
         {
             ViewModel.SandBoxSize = theConfiguration.SandboxSize_px;
             ViewModel.GravitationalConstant = theConfiguration.GravitationConstant;

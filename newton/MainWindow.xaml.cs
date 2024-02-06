@@ -1,9 +1,7 @@
 ﻿using newton.Simulation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Numerics;
+using System.Runtime.InteropServices.JavaScript;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -17,7 +15,7 @@ using System.Windows.Shapes;
 namespace newton
 {
     /// <summary>
-    /// Interaktionslogik für MainWindow.xaml
+    /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
@@ -96,7 +94,7 @@ namespace newton
                 this.PreviewMouseLeftButtonUp -= MainWindow_MouseLeftButtonUp;
             }
 
-            if(myWasSimulationRunning && ViewModel.Start.CanExecute(null))
+            if (myWasSimulationRunning && ViewModel.Start.CanExecute(null))
             {
                 myWasSimulationRunning = false;
                 ViewModel.Start.Execute(null);

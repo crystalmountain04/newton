@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Timers;
 using System.Windows;
 
 namespace newton.Simulation
@@ -19,7 +18,7 @@ namespace newton.Simulation
                 myCalculateTimer.Elapsed -= MyCalculateTimer_Elapsed;
                 myCalculateTimer = null;
             }
-            myCalculateTimer = new Timer(theUniverseToSimulate.Configuration.TimeStep_ms);
+            myCalculateTimer = new System.Timers.Timer(theUniverseToSimulate.Configuration.TimeStep_ms);
             myCalculateTimer.Elapsed += MyCalculateTimer_Elapsed;
 
             Universe = theUniverseToSimulate;
@@ -56,7 +55,7 @@ namespace newton.Simulation
 
         private static object myLock = new object();
 
-        private void MyCalculateTimer_Elapsed(object sender, ElapsedEventArgs e)
+        private void MyCalculateTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             lock (myLock)
             {
@@ -127,6 +126,6 @@ namespace newton.Simulation
             }
         }
 
-        private Timer myCalculateTimer;
+        private System.Timers.Timer myCalculateTimer;
     }
 }

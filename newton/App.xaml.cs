@@ -1,16 +1,11 @@
 ﻿using newton.Simulation;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace newton
 {
     /// <summary>
-    /// Interaktionslogik für "App.xaml"
+    /// Interaction logic for App.xaml
     /// </summary>
     public partial class App : Application
     {
@@ -21,8 +16,9 @@ namespace newton
             var aController = new MainWindowController();
             aView.DataContext = aViewModel;
             aController.ViewModel = aViewModel;
-            aController.Initialize(new Configuration(0.005, 500, -0.01, 5, 1000));
+            aController.Initialize(new SimulationSzenario(0.005, 500, -0.01, 5, 1000));
             aView.Show();
         }
     }
+
 }

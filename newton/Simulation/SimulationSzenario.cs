@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace newton.Simulation
 {
-    public class Configuration
+    public class SimulationSzenario
     {
-        public Configuration()
+        public SimulationSzenario()
         {
         }
 
-        public Configuration(double theTimeStep_ms, int theSandBoxSize_px, double theGravitationConstant, double theCollisionThreshold, double theEventHorizon)
+        public SimulationSzenario(double theTimeStep_ms, int theSandBoxSize_px, double theGravitationConstant, double theCollisionThreshold, double theEventHorizon)
         {
             TimeStep_ms = theTimeStep_ms;
             SandboxSize_px = theSandBoxSize_px;

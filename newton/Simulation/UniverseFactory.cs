@@ -9,7 +9,7 @@ namespace newton.Simulation
 {
     public static class UniverseFactory
     {
-        public static Universe CreateUniverse(Configuration theConfiguration)
+        public static Universe CreateUniverse(SimulationSzenario theConfiguration)
         {
             var aUniverse = new Universe();
             aUniverse.Configuration = theConfiguration;
@@ -17,7 +17,7 @@ namespace newton.Simulation
             return aUniverse;
         }
 
-        private static List<Planet> createInitialPlanets(Configuration theConfiguration)
+        private static List<Planet> createInitialPlanets(SimulationSzenario theConfiguration)
         {
             var aPlanets = new List<Planet>();
 
