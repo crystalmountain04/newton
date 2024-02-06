@@ -1,6 +1,8 @@
-﻿namespace newton.Simulation
+﻿using newton.Simulation;
+
+namespace newton.Services
 {
-    public interface ISimulationEngine
+    public interface ISimulationService
     {
         bool IsRunning { get; }
         Universe Universe { get; }

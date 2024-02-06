@@ -1,4 +1,5 @@
-﻿using newton.Utility;
+﻿using newton.Simulation;
+using newton.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,9 +7,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace newton.Simulation
+namespace newton.Services
 {
-    public class SimulationEngine : ISimulationEngine
+    public class SimulationService : ISimulationService
     {
         public void Initialize(Universe theUniverseToSimulate)
         {
@@ -102,17 +103,17 @@ namespace newton.Simulation
 
         private bool hasPlanetCrossedEventHorizon(Point thePlanetLocation)
         {
-            return (thePlanetLocation.X > Universe.Configuration.EventHorizon ||
+            return thePlanetLocation.X > Universe.Configuration.EventHorizon ||
                     thePlanetLocation.X < -Universe.Configuration.EventHorizon ||
                     thePlanetLocation.Y > Universe.Configuration.EventHorizon ||
-                    thePlanetLocation.Y < -Universe.Configuration.EventHorizon);
+                    thePlanetLocation.Y < -Universe.Configuration.EventHorizon;
         }
 
         private void updateAcceleration(Planet thePlanetToUpdate, Planet theOtherPlanet)
         {
             var aDiff = MathHelper.GetDiffVector(thePlanetToUpdate.Location, theOtherPlanet.Location);
             var aDistance = MathHelper.GetDistance(thePlanetToUpdate.Location, theOtherPlanet.Location);
-            var aNorm = (aDistance * aDistance * aDistance);
+            var aNorm = aDistance * aDistance * aDistance;
             var aNewAcc = new Point(Universe.Configuration.GravitationConstant * thePlanetToUpdate.Mass * theOtherPlanet.Mass * aDiff.X / aNorm,
                 Universe.Configuration.GravitationConstant * thePlanetToUpdate.Mass * theOtherPlanet.Mass * aDiff.Y / aNorm);
 

@@ -5,8 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Xml.Serialization;
+using newton.Simulation;
 
-namespace newton.Simulation
+namespace newton.Services
 {
     public class UniverseService : IUniverseService
     {
@@ -30,6 +31,16 @@ namespace newton.Simulation
                 }
             }
             return null;
+        }
+
+        public void SaveUniverse(string theFileName, Universe theUniverse)
+        {
+            using (var writer = new System.IO.StreamWriter(theFileName))
+            {
+                var serializer = new XmlSerializer(typeof(Universe));
+                serializer.Serialize(writer, theUniverse);
+                writer.Flush();
+            }
         }
 
         private List<Planet> createInitialPlanets(SimulationSzenario theConfiguration)

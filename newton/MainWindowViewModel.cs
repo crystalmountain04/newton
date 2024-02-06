@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Win32;
+using newton.Services;
 using newton.Simulation;
 using newton.Utility;
 using System;
@@ -20,16 +21,16 @@ namespace newton
     public class MainWindowViewModel : ObservableObject
     {
         private DispatcherTimer myRenderTimer;
-        private readonly ISimulationEngine mySimulation;
+        private readonly ISimulationService mySimulationService;
         private readonly IUniverseService myUniverseService;
 
-        public MainWindowViewModel( ISimulationEngine theSimulationEngine, IUniverseService theUniverseService )
+        public MainWindowViewModel( ISimulationService theSimulationEngine, IUniverseService theUniverseService )
         {
-            mySimulation = theSimulationEngine;
+            mySimulationService = theSimulationEngine;
             myUniverseService = theUniverseService;
-            ApplyConstant = new RelayCommand(() => mySimulation?.ApplyGravitationConstant(GravitationalConstant));
-            Start = new RelayCommand(startSimulation, () => mySimulation != null && !mySimulation.IsRunning);
-            Stop = new RelayCommand(stopSimulation, () => mySimulation != null && mySimulation.IsRunning);
+            ApplyConstant = new RelayCommand(() => mySimulationService?.ApplyGravitationConstant(GravitationalConstant));
+            Start = new RelayCommand(startSimulation, () => mySimulationService != null && !mySimulationService.IsRunning);
+            Stop = new RelayCommand(stopSimulation, () => mySimulationService != null && mySimulationService.IsRunning);
             Reset = new RelayCommand(resetSimulation);
             Save = new RelayCommand(saveUniverseToFile);
             Load = new RelayCommand(openUniverseFromFile);
@@ -42,17 +43,17 @@ namespace newton
 
         public void Initialize(SimulationSzenario theConfiguration)
         {
-            mySimulation.Initialize(myUniverseService.CreateUniverse(theConfiguration));
+            mySimulationService.Initialize(myUniverseService.CreateUniverse(theConfiguration));
 
             configureVisualization(theConfiguration);
-            displayUniverse(mySimulation.Universe);
+            displayUniverse(mySimulationService.Universe);
         }
 
         private void resetSimulation()
         {
-            mySimulation.Initialize(myUniverseService.CreateUniverse(mySimulation.Universe.Configuration));
+            mySimulationService.Initialize(myUniverseService.CreateUniverse(mySimulationService.Universe.Configuration));
             updateCommandAvailability();
-            displayUniverse(mySimulation.Universe);
+            displayUniverse(mySimulationService.Universe);
         }
 
         private void openUniverseFromFile()
@@ -63,10 +64,10 @@ namespace newton
                 var aUniverse = myUniverseService.LoadUniverse(openFileDialog.FileName);
                 if (null != aUniverse)
                 {
-                    mySimulation.Initialize(aUniverse);
+                    mySimulationService.Initialize(aUniverse);
                     updateCommandAvailability();
                     configureVisualization(aUniverse.Configuration);
-                    displayUniverse(mySimulation.Universe);
+                    displayUniverse(mySimulationService.Universe);
                 }
             }
         }
@@ -76,13 +77,13 @@ namespace newton
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             if (saveFileDialog.ShowDialog() == true)
             {
-                mySimulation.Universe.Save(saveFileDialog.FileName);
+                myUniverseService.SaveUniverse(saveFileDialog.FileName, mySimulationService.Universe);
             }
         }
 
         private void syncToSimulation()
         {
-            mySimulation.Universe.Planets = Helper.DeepCopy(Planets);
+            mySimulationService.Universe.Planets = Planets.ConvertAll(p => new Planet(p));
         }
 
         private void configureVisualization(SimulationSzenario theConfiguration)
@@ -93,7 +94,7 @@ namespace newton
 
         private void startSimulation()
         {
-            mySimulation.StartSimulation();
+            mySimulationService.StartSimulation();
             myRenderTimer.Start();
             updateCommandAvailability();
             IsSimulationRunning = true;
@@ -101,7 +102,7 @@ namespace newton
 
         private void stopSimulation()
         {
-            mySimulation.StopSimulation();
+            mySimulationService.StopSimulation();
             myRenderTimer.Stop();
             updateCommandAvailability();
             IsSimulationRunning = false;
@@ -115,7 +116,7 @@ namespace newton
 
         private void MyRenderTimer_Tick(object sender, EventArgs e)
         {
-            displayUniverse(mySimulation.Universe);
+            displayUniverse(mySimulationService.Universe);
         }
 
         private void displayUniverse(Universe theUniverseToDisplay)
