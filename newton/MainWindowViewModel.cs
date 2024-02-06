@@ -20,28 +20,29 @@ namespace newton
     public class MainWindowViewModel : ObservableObject
     {
         private DispatcherTimer myRenderTimer;
+        private readonly ISimulationEngine mySimulation;
+        private readonly IUniverseService myUniverseService;
 
-        public MainWindowViewModel()
+        public MainWindowViewModel( ISimulationEngine theSimulationEngine, IUniverseService theUniverseService )
         {
-            mySimulation = new SimulationEngine();
-            ApplyConstant = new RelayCommand(() => mySimulation?.ApplyGravitationConstant(GravitationalConstant), () => true);
-            Start = new RelayCommand(() => startSimulation(), () => mySimulation != null && !mySimulation.IsRunning);
-            Stop = new RelayCommand(() => stopSimulation(), () => mySimulation != null && mySimulation.IsRunning);
-            Reset = new RelayCommand(() => resetSimulation(), () => true);
-            Save = new RelayCommand(() => saveUniverseToFile(), () => true);
-            Load = new RelayCommand(() => openUniverseFromFile(), () => true);
-            SyncToSimulation = new RelayCommand(() => syncToSimulation(), () => true);
+            mySimulation = theSimulationEngine;
+            myUniverseService = theUniverseService;
+            ApplyConstant = new RelayCommand(() => mySimulation?.ApplyGravitationConstant(GravitationalConstant));
+            Start = new RelayCommand(startSimulation, () => mySimulation != null && !mySimulation.IsRunning);
+            Stop = new RelayCommand(stopSimulation, () => mySimulation != null && mySimulation.IsRunning);
+            Reset = new RelayCommand(resetSimulation);
+            Save = new RelayCommand(saveUniverseToFile);
+            Load = new RelayCommand(openUniverseFromFile);
+            SyncToSimulation = new RelayCommand(syncToSimulation);
 
             myRenderTimer = new DispatcherTimer();
             myRenderTimer.Interval = new TimeSpan(0, 0, 0, 0, 10);
             myRenderTimer.Tick += MyRenderTimer_Tick;
         }
 
-        private SimulationEngine mySimulation;
-
         public void Initialize(SimulationSzenario theConfiguration)
         {
-            mySimulation.Initialize(UniverseFactory.CreateUniverse(theConfiguration));
+            mySimulation.Initialize(myUniverseService.CreateUniverse(theConfiguration));
 
             configureVisualization(theConfiguration);
             displayUniverse(mySimulation.Universe);
@@ -49,7 +50,7 @@ namespace newton
 
         private void resetSimulation()
         {
-            mySimulation.Initialize(UniverseFactory.CreateUniverse(mySimulation.Universe.Configuration));
+            mySimulation.Initialize(myUniverseService.CreateUniverse(mySimulation.Universe.Configuration));
             updateCommandAvailability();
             displayUniverse(mySimulation.Universe);
         }
@@ -59,7 +60,7 @@ namespace newton
             OpenFileDialog openFileDialog = new OpenFileDialog();
             if (openFileDialog.ShowDialog() == true)
             {
-                var aUniverse = new Universe(openFileDialog.FileName);
+                var aUniverse = myUniverseService.LoadUniverse(openFileDialog.FileName);
                 if (null != aUniverse)
                 {
                     mySimulation.Initialize(aUniverse);

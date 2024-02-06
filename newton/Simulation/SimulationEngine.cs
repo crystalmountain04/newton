@@ -8,7 +8,7 @@ using System.Windows;
 
 namespace newton.Simulation
 {
-    public class SimulationEngine
+    public class SimulationEngine : ISimulationEngine
     {
         public void Initialize(Universe theUniverseToSimulate)
         {

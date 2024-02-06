@@ -4,12 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Xml.Serialization;
 
 namespace newton.Simulation
 {
-    public static class UniverseFactory
+    public class UniverseService : IUniverseService
     {
-        public static Universe CreateUniverse(SimulationSzenario theConfiguration)
+        public Universe CreateUniverse(SimulationSzenario theConfiguration)
         {
             var aUniverse = new Universe();
             aUniverse.Configuration = theConfiguration;
@@ -17,7 +18,21 @@ namespace newton.Simulation
             return aUniverse;
         }
 
-        private static List<Planet> createInitialPlanets(SimulationSzenario theConfiguration)
+        public Universe? LoadUniverse(string theFileName)
+        {
+            using (var stream = new System.IO.FileStream(theFileName, System.IO.FileMode.Open))
+            {
+                var serializer = new XmlSerializer(typeof(Universe));
+                var aObject = serializer.Deserialize(stream);
+                if (aObject is Universe)
+                {
+                    return aObject as Universe;
+                }
+            }
+            return null;
+        }
+
+        private List<Planet> createInitialPlanets(SimulationSzenario theConfiguration)
         {
             var aPlanets = new List<Planet>();
 

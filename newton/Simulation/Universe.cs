@@ -19,16 +19,6 @@ namespace newton.Simulation
             Configuration = theConfiguration;
         }
 
-        public Universe(string theFileName)
-        {
-            var aUniverse = Load(theFileName);
-            if(null != aUniverse)
-            {
-                this.Planets = aUniverse.Planets;
-                this.Configuration = aUniverse.Configuration;
-            }
-        }
-
         public List<Planet> Planets
         {
             get;
@@ -39,20 +29,6 @@ namespace newton.Simulation
         {
             get;
             set;
-        }
-
-        private Universe Load(string theFileName)
-        {
-            using (var stream = new System.IO.FileStream(theFileName, System.IO.FileMode.Open))
-            {
-                var serializer = new XmlSerializer(this.GetType());
-                var aObject = serializer.Deserialize(stream);
-                if(aObject is Universe)
-                {
-                    return aObject as Universe;
-                }
-            }
-            return null;
         }
 
         public void Save(string FileName)
