@@ -3,7 +3,7 @@ using System.Windows;
 
 namespace newton.Simulation
 {
-    public class Planet : ObservableObject
+    public partial class Planet : ObservableObject
     {
         public Planet()
         {
@@ -11,67 +11,56 @@ namespace newton.Simulation
 
         public Planet(double theMass, Point theInitialLocation, Point theInitialAcceleration, string theColor)
         {
-            myMass = theMass;
-            myLocation = theInitialLocation;
-            myAcceleration = theInitialAcceleration;
-            myColor = theColor;
+            Mass = theMass;
+            Location = theInitialLocation;
+            Acceleration = theInitialAcceleration;
+            Color = theColor;
         }
 
         public Planet(Planet theCopy)
         {
-            myMass = theCopy.myMass;
-            myLocation = new Point(theCopy.myLocation.X, theCopy.myLocation.Y);
-            myAcceleration = new Point(theCopy.myAcceleration.X, theCopy.myAcceleration.Y);
-            myColor = theCopy.myColor;
+            Mass = theCopy.Mass;
+            Location = new Point(theCopy.Location.X, theCopy.Location.Y);
+            Acceleration = new Point(theCopy.Acceleration.X, theCopy.Acceleration.Y);
+            Color = theCopy.Color;
         }
 
-        private Point myLocation;
-        public Point Location
-        {
-            get => myLocation;
-            set
-            {
-                SetProperty(ref myLocation, value);
-                OnPropertyChanged(nameof(DisplayedLocation));
-            }
-        }
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(DisplayedLocation))]
+        private Point location;
 
         public Point DisplayedLocation
         {
-            get { return new Point(myLocation.X - (DisplayedSize / 2.0), myLocation.Y - (DisplayedSize / 2.0)); }
+            get { return new Point(Location.X - (DisplayedSize / 2.0), Location.Y - (DisplayedSize / 2.0)); }
         }
 
-        private Point myAcceleration;
         public Point Acceleration
         {
-            get { return myAcceleration; }
-            set { myAcceleration = value; }
+            get;
+            set;
         }
 
-        private double myMass;
         public double Mass
         {
-            get { return myMass; }
-            set { myMass = value; }
+            get;
+            set;
         }
 
         public double DisplayedSize
         {
-            get { return myMass > 1000 ? 10 : 2; }// myMass / 10.0; }
+            get => Mass > 1000 ? 30 : 10;
         }
 
-        private string myColor;
         public string Color
         {
-            get { return myColor; }
-            set { myColor = value; }
+            get;
+            set;
         }
 
-        private bool myIsNotInteracting;
         public bool IsDoomed
         {
-            get { return myIsNotInteracting; }
-            set { myIsNotInteracting = value; }
+            get;
+            set;
         }
     }
 }
