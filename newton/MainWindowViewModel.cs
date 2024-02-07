@@ -6,7 +6,7 @@ using System.Windows.Threading;
 
 namespace newton
 {
-    public class MainWindowViewModel : ObservableObject
+    public partial class MainWindowViewModel : ObservableObject
     {
         private readonly DispatcherTimer myRenderTimer;
         private readonly ISimulationService mySimulationService;
@@ -98,8 +98,8 @@ namespace newton
 
         private async Task stopSimulation()
         {
-            await mySimulationService.StopSimulationAsync();
             myRenderTimer.Stop();
+            await mySimulationService.StopSimulationAsync();
             updateCommandAvailability();
             IsSimulationRunning = false;
         }
@@ -120,41 +120,23 @@ namespace newton
             Planets = theUniverseToDisplay.Planets;
         }
 
-        private int mySandBoxSize;
-        public int SandBoxSize
-        {
-            get => mySandBoxSize;
-            set => SetProperty(ref mySandBoxSize, value);
-        }
+        [ObservableProperty]
+        private int sandBoxSize;
 
-        private List<Planet> myPlanets = [];
-        public List<Planet> Planets
-        {
-            get => myPlanets;
-            set => SetProperty(ref myPlanets, value);
-        }
+        [ObservableProperty]
+        private List<Planet> planets = [];
 
-        private double myGravitationalConstant;
-        public double GravitationalConstant
-        {
-            get => myGravitationalConstant;
-            set => SetProperty(ref myGravitationalConstant, value);
-        }
+        [ObservableProperty]
+        private double gravitationalConstant;
 
         public bool IsSimulationRunning { get; set; }
 
         public RelayCommand SyncToSimulation { get; set; }
-
         public RelayCommand ApplyConstant { get; set; }
-
         public RelayCommand Start { get; set; }
-
         public AsyncRelayCommand Stop { get; set; }
-
         public RelayCommand Reset { get; set; }
-
         public RelayCommand Save { get; set; }
-
         public AsyncRelayCommand Load { get; set; }
     }
 }
