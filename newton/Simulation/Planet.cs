@@ -48,7 +48,7 @@ namespace newton.Simulation
 
         public double DisplayedSize
         {
-            get => Mass > 1000 ? 30 : 10;
+            get => Mass > 1000 ? 20 : 7;
         }
 
         public string Color

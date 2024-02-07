@@ -24,6 +24,7 @@
                 <DataTemplate DataType="{x:Type simulation:Planet}">
                     <Ellipse Width="{Binding DisplayedSize}" Height="{Binding DisplayedSize}"
                              MouseLeftButtonDown="Ellipse_MouseLeftButtonDown"
+                             MouseRightButtonDown="Ellipse_MouseRightButtonDown"
                              StrokeThickness="1"
                              Stroke="{Binding Color}" Fill="{Binding Color}" />
                 </DataTemplate>

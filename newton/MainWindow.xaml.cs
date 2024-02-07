@@ -38,6 +38,18 @@ namespace newton
             startDragMode(sender as Ellipse);
         }
 
+        private void Ellipse_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if(sender is Ellipse aEllipse)
+            {
+                if (aEllipse.DataContext is Planet aPlanet)
+                {
+                    // right click should stop a planet
+                    aPlanet.Acceleration = new Point(0, 0);
+                }
+            }
+        }
+
         private void MainWindow_MouseMove(object sender, MouseEventArgs e)
         {
             executeMove(e.GetPosition(myHost));
