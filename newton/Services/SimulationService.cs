@@ -1,5 +1,6 @@
 ﻿using newton.Simulation;
 using newton.Utility;
+using System.Diagnostics;
 using System.Windows;
 
 namespace newton.Services
@@ -54,12 +55,13 @@ namespace newton.Services
             Universe.Configuration.GravitationConstant = theConstant;
         }
 
-        private static object myLock = new object();
+        private static SemaphoreSlim myCalculationSemaphore = new SemaphoreSlim(1);
 
-        private void MyCalculateTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        private async void MyCalculateTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            lock (myLock)
+            try
             {
+                await myCalculationSemaphore.WaitAsync().ConfigureAwait(false);
                 var aPlanetsToRemove = new List<Planet>();
                 foreach (var aPlanet in Universe.Planets)
                 {
@@ -84,6 +86,11 @@ namespace newton.Services
                         applyAcceleration(aPlanet);
                     }
                 }
+                myCalculationSemaphore.Release();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
             }
         }
 
