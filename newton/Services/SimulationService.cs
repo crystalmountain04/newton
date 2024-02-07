@@ -11,17 +11,16 @@ namespace newton.Services
 {
     public class SimulationService : ISimulationService
     {
+        public SimulationService(Utility.ITimer theTimer)
+        {
+            myCalculateTimer = theTimer;
+        }
+
         public void Initialize(Universe theUniverseToSimulate)
         {
+            myCalculateTimer.Stop();
             IsRunning = false;
-            if (null != myCalculateTimer)
-            {
-                myCalculateTimer.Elapsed -= MyCalculateTimer_Elapsed;
-                myCalculateTimer = null;
-            }
-            myCalculateTimer = new System.Timers.Timer(theUniverseToSimulate.Configuration.TimeStep_ms);
-            myCalculateTimer.Elapsed += MyCalculateTimer_Elapsed;
-
+            myCalculateTimer.Interval = theUniverseToSimulate.Configuration.TimeStep_ms;
             Universe = theUniverseToSimulate;
         }
 
@@ -34,13 +33,19 @@ namespace newton.Services
         public void StartSimulation()
         {
             IsRunning = true;
+            myCalculateTimer.Elapsed += MyCalculateTimer_Elapsed;
             myCalculateTimer.Start();
         }
 
         public void StopSimulation()
         {
+            if(!IsRunning)
+            {
+                return;
+            }
             IsRunning = false;
             myCalculateTimer.Stop();
+            myCalculateTimer.Elapsed -= MyCalculateTimer_Elapsed;
         }
 
         public bool IsRunning
@@ -133,6 +138,6 @@ namespace newton.Services
             }
         }
 
-        private System.Timers.Timer myCalculateTimer;
+        private Utility.ITimer myCalculateTimer;
     }
 }

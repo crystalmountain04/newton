@@ -48,6 +48,8 @@ namespace newton
 
         private void openUniverseFromFile()
         {
+            mySimulationService.StopSimulation();
+
             var aFileName = myIOService.OpenFile();
             if (string.IsNullOrEmpty(aFileName))
             {
