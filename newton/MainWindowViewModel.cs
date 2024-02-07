@@ -20,10 +20,10 @@ namespace newton
             myIOService = theIOService;
             ApplyConstant = new RelayCommand(() => mySimulationService?.ApplyGravitationConstant(GravitationalConstant));
             Start = new RelayCommand(startSimulation, () => mySimulationService != null && !mySimulationService.IsRunning);
-            Stop = new RelayCommand(stopSimulation, () => mySimulationService != null && mySimulationService.IsRunning);
+            Stop = new AsyncRelayCommand(stopSimulation, () => mySimulationService != null && mySimulationService.IsRunning);
             Reset = new RelayCommand(resetSimulation);
             Save = new RelayCommand(saveUniverseToFile);
-            Load = new RelayCommand(openUniverseFromFile);
+            Load = new AsyncRelayCommand(openUniverseFromFile);
             SyncToSimulation = new RelayCommand(syncToSimulation);
 
             myRenderTimer = new DispatcherTimer();
@@ -46,9 +46,9 @@ namespace newton
             displayUniverse(mySimulationService.Universe);
         }
 
-        private void openUniverseFromFile()
+        private async Task openUniverseFromFile()
         {
-            mySimulationService.StopSimulation();
+            await mySimulationService.StopSimulationAsync();
 
             var aFileName = myIOService.OpenFile();
             if (string.IsNullOrEmpty(aFileName))
@@ -96,9 +96,9 @@ namespace newton
             IsSimulationRunning = true;
         }
 
-        private void stopSimulation()
+        private async Task stopSimulation()
         {
-            mySimulationService.StopSimulation();
+            await mySimulationService.StopSimulationAsync();
             myRenderTimer.Stop();
             updateCommandAvailability();
             IsSimulationRunning = false;
@@ -149,12 +149,12 @@ namespace newton
 
         public RelayCommand Start { get; set; }
 
-        public RelayCommand Stop { get; set; }
+        public AsyncRelayCommand Stop { get; set; }
 
         public RelayCommand Reset { get; set; }
 
         public RelayCommand Save { get; set; }
 
-        public RelayCommand Load { get; set; }
+        public AsyncRelayCommand Load { get; set; }
     }
 }

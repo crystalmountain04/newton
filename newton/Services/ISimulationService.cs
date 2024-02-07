@@ -10,6 +10,6 @@ namespace newton.Services
         void ApplyGravitationConstant(double theConstant);
         void Initialize(Universe theUniverseToSimulate);
         void StartSimulation();
-        void StopSimulation();
+        Task StopSimulationAsync();
     }
 }

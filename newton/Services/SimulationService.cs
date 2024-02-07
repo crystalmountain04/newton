@@ -33,16 +33,22 @@ namespace newton.Services
             myCalculateTimer.Start();
         }
 
-        public void StopSimulation()
+        public async Task StopSimulationAsync()
         {
             if(!IsRunning)
             {
                 return;
             }
+            myIsStopRequested = true;
+            await myCalculationSemaphore.WaitAsync();
             IsRunning = false;
             myCalculateTimer.Stop();
             myCalculateTimer.Elapsed -= MyCalculateTimer_Elapsed;
+            myCalculationSemaphore.Release();
+            myIsStopRequested = false;
         }
+
+        private bool myIsStopRequested;
 
         public bool IsRunning
         {
@@ -65,6 +71,11 @@ namespace newton.Services
                 var aPlanetsToRemove = new List<Planet>();
                 foreach (var aPlanet in Universe.Planets)
                 {
+                    if(myIsStopRequested)
+                    {
+                        break;
+                    }
+
                     if (aPlanet.IsDoomed)
                     {
                         aPlanetsToRemove.Add(aPlanet);
@@ -76,11 +87,20 @@ namespace newton.Services
 
                 foreach (var aPlanet in aPlanetsToRemove)
                 {
+                    if (myIsStopRequested)
+                    {
+                        break;
+                    }
                     Universe.Planets.Remove(aPlanet);
                 }
 
                 foreach (var aPlanet in Universe.Planets)
                 {
+                    if (myIsStopRequested)
+                    {
+                        break;
+                    }
+
                     if (!aPlanet.IsDoomed)
                     {
                         applyAcceleration(aPlanet);
@@ -98,6 +118,10 @@ namespace newton.Services
         {
             foreach (var aOtherPlanet in Universe.Planets)
             {
+                if (myIsStopRequested)
+                {
+                    break;
+                }
                 if (aOtherPlanet.IsDoomed || aOtherPlanet == thePlanet)
                 {
                     continue;
@@ -133,10 +157,6 @@ namespace newton.Services
             if (aDistance > Universe.Configuration.CollisionThreshold)
             {
                 thePlanetToUpdate.Acceleration = MathHelper.AddPoints(thePlanetToUpdate.Acceleration, aNewAcc);
-            }
-            else
-            {
-                // nothing
             }
         }
 
